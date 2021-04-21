@@ -115,4 +115,7 @@ urlpatterns = [
     path('WOTask', views.WOTaskCreate.as_view(), name='WOTaskCreate'),
     path('WOTask/', views.WOTaskView.as_view(), name='WOTaskView'),
     path('WOTask/<int:pk>/', views.WOTaskRetrive.as_view(), name='WOTaskRetrive'),
+    path('User', views.UserCreate.as_view(), name='UserCreate'),
+    path('User/', views.UserView.as_view(), name='UserView'),
+    path('User/<int:pk>/', views.UserRetrive.as_view(), name='UserRetrive'),
 ]

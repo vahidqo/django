@@ -5,6 +5,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
     PersonnelJobCategory
+from django.contrib.auth.models import User
 
 
 class AssetCategorySerializer(serializers.ModelSerializer):
@@ -74,7 +75,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class PersonnelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personnel
-        fields = ['id', 'PersonnelCode', 'PersonnelNetCode', 'PersonnelName', 'PersonnelFamily', 'PersonnelMobile',
+        fields = ['id', 'user', 'PersonnelCode', 'PersonnelNetCode', 'PersonnelName', 'PersonnelFamily', 'PersonnelMobile',
                   'DepartmentID']
 
 
@@ -275,3 +276,9 @@ class WOTemplateSchualingSerializer(serializers.ModelSerializer):
         model = WOTemplateSchualing
         fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
                   'WOTemplateID', 'FrequencyID']
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'password',
+                  'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']

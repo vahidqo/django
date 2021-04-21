@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django_jalali.db import models as jmodels
-
+from django.contrib.auth.models import User
 
 class AssetCategory(models.Model):
     AssetCategoryCode = models.CharField(max_length=100, verbose_name='کد خانواده تجهیز')
@@ -445,6 +445,7 @@ class Department(models.Model):
 
 
 class Personnel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, verbose_name='یوزر')
     PersonnelCode = models.CharField(max_length=100, verbose_name='کد پرسنل')
     PersonnelNetCode = models.CharField(max_length=100, verbose_name='کد نت پرسنل')
     PersonnelName = models.CharField(max_length=200, verbose_name='نام پرسنل')

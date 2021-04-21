@@ -15,11 +15,12 @@ from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetCla
     PersonnelJobCategorySerializer, TypeWrSerializer, WorkPrioritySerializer, SupplierSerializer, SupplierSpecificSerializer, \
     SupplierSpecificDataSerializer, AssetClassTaskSerializer, WorkRequestSerializer, WorkOrderSerializer, \
     WOSupplierSerializer, WOPersonnelSerializer, DelaySerializer, WODelaySerializer, WOSparePartSerializer, \
-    WOTaskSerializer
+    WOTaskSerializer, UserSerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 import django_filters
+from django.contrib.auth.models import User
 
 class NumberInFilter(django_filters.BaseInFilter, django_filters.NumberFilter):
     pass
@@ -735,3 +736,23 @@ class WOTaskCreate(generics.ListCreateAPIView):
 class WOTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WOTaskSerializer
     queryset = WOTask.objects.all()
+
+class UserView(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'username', 'first_name', 'last_name', 'password',
+                  'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', ]
+
+
+class UserCreate(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'username', 'first_name', 'last_name', 'password',
+                  'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', ]
+
+
+class UserRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
