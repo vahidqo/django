@@ -105,7 +105,7 @@ class LocationSerializer(serializers.ModelSerializer):
 class AssetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
-        fields = ['id', 'AssetCode', 'AssetName', 'InstallationDate', 'AssetPriorityID', 'LocationID', 'AssetClassID']
+        fields = ['id', 'AssetCode', 'AssetName', 'InstallationDate', 'AssetPriorityID', 'LocationID', 'AssetClassID', 'status', 'fakesub']
 
 
 class AssetClassDocumentSerializer(serializers.ModelSerializer):
@@ -122,7 +122,7 @@ class AssetClassDocumentSerializer(serializers.ModelSerializer):
 class AssetSubdivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssetSubdivision
-        fields = ['id', 'AssetID', 'AssetChildID', 'AssetSubdivisionFatherID','tree']
+        fields = ['id', 'AssetID', 'AssetChildID', 'AssetSubdivisionFatherID', 'tree', 'fakelocation']
 
 
 class SparePartDimensionSerializer(serializers.ModelSerializer):

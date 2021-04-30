@@ -162,6 +162,8 @@ class Asset(models.Model):
     AssetPriorityID = models.ForeignKey('AssetPriority', on_delete=models.CASCADE, blank=False, verbose_name='اولویت')
     LocationID = models.ForeignKey('Location', on_delete=models.CASCADE, blank=False, verbose_name='مکان')
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.CASCADE, blank=False, verbose_name='کلاس تجهیز')
+    status = models.IntegerField(verbose_name='وضعيت توليد', blank=True)
+    fakesub = models.IntegerField(verbose_name='زيرمجموعه فيک', blank=True)
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -181,6 +183,7 @@ class AssetSubdivision(models.Model):
                                      verbose_name='زیر تجهیز')
     AssetSubdivisionFatherID = models.ForeignKey('self', on_delete=models.CASCADE,
                                                  blank=True, verbose_name='کلاس پدر')
+    fakelocation=models.IntegerField(verbose_name='مکان فيک', blank=True)
     tree = models.IntegerField(blank=True, verbose_name='وضعیت درخت')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
@@ -193,28 +196,57 @@ class AssetSubdivision(models.Model):
 
 def save_Asset(sender, instance, created, **kwargs):
     if created:
-        AssetSubdivision.objects.create(AssetID=instance, AssetChildID=instance.AssetClassID, tree=1)
-        cn = AssetClassSubdivision.objects.filter(AssetClassFatherID=instance.AssetClassID)
-        ma = AssetSubdivision.objects.last()
-        for i in cn:
-            chn = range(i.AssetClassChildNumber)
-            for j in chn:
-                AssetSubdivision.objects.create(AssetChildID=i.AssetClassChildID, AssetSubdivisionFatherID=ma, tree=0)
-                cnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=i.AssetClassChildID)
-                maa = AssetSubdivision.objects.filter(AssetChildID=i.AssetClassChildID, AssetSubdivisionFatherID=ma)
-                for z in cnn:
-                    chnn = range(z.AssetClassChildNumber)
-                    for x in chnn:
-                        AssetSubdivision.objects.create(AssetChildID=z.AssetClassChildID,
-                                                        AssetSubdivisionFatherID=maa[0], tree=0)
-                        ccnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=z.AssetClassChildID)
-                        mmaa = AssetSubdivision.objects.filter(AssetChildID=z.AssetClassChildID,
-                                                               AssetSubdivisionFatherID=maa[0])
-                        for y in ccnn:
-                            chhnn = range(y.AssetClassChildNumber)
-                            for m in chhnn:
-                                AssetSubdivision.objects.create(AssetChildID=y.AssetClassChildID,
-                                                                AssetSubdivisionFatherID=mmaa[0], tree=0)
+        if instance.status == 0:
+            AssetSubdivision.objects.create(AssetID=instance, AssetChildID=instance.AssetClassID, tree=1, fakelocation=instance.LocationID.id)
+            cn = AssetClassSubdivision.objects.filter(AssetClassFatherID=instance.AssetClassID)
+            ma = AssetSubdivision.objects.filter(AssetID=instance, AssetChildID=instance.AssetClassID, tree=1)
+            for i in cn:
+                chn = range(i.AssetClassChildNumber)
+                for j in chn:
+                    AssetSubdivision.objects.create(AssetChildID=i.AssetClassChildID, AssetSubdivisionFatherID=ma[0], tree=0, fakelocation=instance.LocationID.id)
+                    cnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=i.AssetClassChildID)
+                    maa = AssetSubdivision.objects.filter(AssetChildID=i.AssetClassChildID, AssetSubdivisionFatherID=ma[0])
+                    for z in cnn:
+                        chnn = range(z.AssetClassChildNumber)
+                        for x in chnn:
+                            AssetSubdivision.objects.create(AssetChildID=z.AssetClassChildID,
+                                                            AssetSubdivisionFatherID=maa[0], tree=0, fakelocation=instance.LocationID.id)
+                            cnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=z.AssetClassChildID)
+                            maaa = AssetSubdivision.objects.filter(AssetChildID=z.AssetClassChildID,
+                                                                   AssetSubdivisionFatherID=maa[0])
+                            for y in cnnn:
+                                chhnn = range(y.AssetClassChildNumber)
+                                for m in chhnn:
+                                    AssetSubdivision.objects.create(AssetChildID=y.AssetClassChildID,
+                                                                    AssetSubdivisionFatherID=maaa[0], tree=0, fakelocation=instance.LocationID.id)
+                                    cnnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=y.AssetClassChildID)
+                                    maaaa = AssetSubdivision.objects.filter(AssetChildID=y.AssetClassChildID, AssetSubdivisionFatherID=maaa[0])
+                                    for n in cnnnn:
+                                        chhnnn = range(n.AssetClassChildNumber)
+                                        for r in chhnnn:
+                                            AssetSubdivision.objects.create(AssetChildID=n.AssetClassChildID,
+                                                                            AssetSubdivisionFatherID=maaaa[0], tree=0, fakelocation=instance.LocationID.id)
+                                            cnnnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=n.AssetClassChildID)
+                                            maaaaa = AssetSubdivision.objects.filter(AssetChildID=n.AssetClassChildID, AssetSubdivisionFatherID=maaaa[0])
+                                            for v in cnnnnn:
+                                                chhnnnn = range(v.AssetClassChildNumber)
+                                                for c in chhnnnn:
+                                                    AssetSubdivision.objects.create(AssetChildID=v.AssetClassChildID,
+                                                                                    AssetSubdivisionFatherID=maaaaa[0], tree=0, fakelocation=instance.LocationID.id)
+                                                    cnnnnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=v.AssetClassChildID)
+                                                    maaaaaa = AssetSubdivision.objects.filter(AssetChildID=v.AssetClassChildID, AssetSubdivisionFatherID=maaaaa[0])
+                                                    for b in cnnnnnn:
+                                                        chhnnnnn = range(b.AssetClassChildNumber)
+                                                        for s in chhnnnnn:
+                                                            AssetSubdivision.objects.create(AssetChildID=b.AssetClassChildID,
+                                                                                            AssetSubdivisionFatherID=maaaaaa[0], tree=0, fakelocation=instance.LocationID.id)
+        elif instance.status == 1:
+            AssetSubdivision.objects.filter(id=instance.fakesub).update(AssetID=instance)
+        
+                                                
+                                    
+                                    
+                                    
 
 
 post_save.connect(save_Asset, sender=Asset)
