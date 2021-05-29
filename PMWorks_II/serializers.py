@@ -4,7 +4,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
-    PersonnelJobCategory
+    PersonnelJobCategory, WorkRequestFailureCause
 from django.contrib.auth.models import User
 
 
@@ -122,7 +122,7 @@ class AssetClassDocumentSerializer(serializers.ModelSerializer):
 class AssetSubdivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssetSubdivision
-        fields = ['id', 'AssetID', 'AssetChildID', 'AssetSubdivisionFatherID', 'tree', 'fakelocation']
+        fields = ['id', 'AssetID', 'AssetChildID', 'AssetSubdivisionFatherID', 'tree', 'fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName']
 
 
 class SparePartDimensionSerializer(serializers.ModelSerializer):
@@ -200,7 +200,7 @@ class SupplierSpecificDataSerializer(serializers.ModelSerializer):
 class WorkRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkRequest
-        fields = ['id', 'WRDate', 'WRDateOfRegistration', 'AssetSubdivisionID', 'FailureModeID', 'FailureCauseID',
+        fields = ['id', 'WRDate', 'WRDateOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
                   'WorkPriorityID', 'TypeWrID']
 
 
@@ -219,7 +219,7 @@ class WorkPrioritySerializer(serializers.ModelSerializer):
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
-        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'WorkRequestID']
+        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID']
 
 
 class WOSupplierSerializer(serializers.ModelSerializer):
@@ -231,7 +231,7 @@ class WOSupplierSerializer(serializers.ModelSerializer):
 class WOPersonnelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOPersonnel
-        fields = ['id', 'WorkDate', 'WorkTime', 'WorkOrderID', 'PersonnelID', 'SupplierID']
+        fields = ['id', 'WorkDate', 'WorkTime', 'WorkOrderID', 'PersonnelID']
 
 
 class DelaySerializer(serializers.ModelSerializer):
@@ -282,3 +282,20 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'password',
                   'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']
+
+class AssetSubdivisionAssetSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    AssetID__AssetName = serializers.CharField()
+    AssetID__AssetCode = serializers.CharField()
+    AssetSubdivisionFatherID=serializers.IntegerField()
+    AssetID = serializers.IntegerField()
+    AssetChildID = serializers.IntegerField()
+    tree = serializers.IntegerField()
+    fakelocation = serializers.IntegerField()
+
+class WorkRequestFailureCauseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkRequestFailureCause
+        fields = ['id', 'WorkRequestID', 'FailureCauseID']
+
+

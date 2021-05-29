@@ -303,7 +303,7 @@ class SupplierSpecificDataAdmin(admin.ModelAdmin):
 @admin.register(WorkRequest)
 class WorkRequestAdmin(admin.ModelAdmin):
     list_display = (
-        'WRDate', 'AssetSubdivisionID_Name', 'FailureModeID_Name', 'FailureCauseID_Name', 'WorkPriorityID_Name',
+        'WRDate', 'AssetSubdivisionID_Name', 'FailureModeID_Name', 'WorkPriorityID_Name',
         'TypeWrID_Name', 'Create')
 
     def AssetSubdivisionID_Name(self, obj):
@@ -315,14 +315,11 @@ class WorkRequestAdmin(admin.ModelAdmin):
     def WorkPriorityID_Name(self, obj):
         return obj.WorkPriorityID.WorkPriorityName
 
-    def FailureCauseID_Name(self, obj):
-        return "\n".join([p.FailureCauseName for p in obj.FailureCauseID.all()])
-
     def TypeWrID_Name(self, obj):
         return obj.TypeWrID.TypeWrName
 
     list_filter = (
-        'WRDate', 'AssetSubdivisionID', 'FailureModeID', 'FailureCauseID', 'WorkPriorityID', 'TypeWrID', 'Create')
+        'WRDate', 'AssetSubdivisionID', 'FailureModeID', 'WorkPriorityID', 'TypeWrID', 'Create')
     ordering = ['Create', 'WRDate']
 
 
