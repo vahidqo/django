@@ -4,7 +4,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
-    PersonnelJobCategory, WorkRequestFailureCause
+    PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOActivityTemplateTbl, TemplateSchualingDate
 from django.contrib.auth.models import User
 
 
@@ -268,7 +268,7 @@ class WOTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOTemplate
         fields = ['id', 'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateDurationHour',
-                  'WOTemplateAlarmDay', 'WOTemplateAlarmHour', 'DepartmentID', 'AssetClassTaskID']
+                  'WOTemplateAlarmDay', 'WOTemplateAlarmHour', 'DepartmentID', 'WOTemplateTypeID']
 
 
 class WOTemplateSchualingSerializer(serializers.ModelSerializer):
@@ -277,11 +277,32 @@ class WOTemplateSchualingSerializer(serializers.ModelSerializer):
         fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
                   'WOTemplateID', 'FrequencyID']
 
+
+class WOTemplateTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WOTemplateType
+        fields = ['id', 'WOTemplateTypeCode', 'WOTemplateTypeName', 'WOTemplateTypeDescription']
+
+
+class WOActivityTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WOActivityTemplateTbl
+        fields = ['id', 'WOTemplateID', 'AssetClassTaskID', 'AssetSubdivisionID']
+
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'password',
                   'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']
+
+
+class TemplateSchualingDateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TemplateSchualingDate
+        fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo']
+
 
 class AssetSubdivisionAssetSerializer(serializers.Serializer):
     id = serializers.IntegerField()

@@ -2,6 +2,9 @@ from django.db import models
 from django.db.models.signals import post_save
 from django_jalali.db import models as jmodels
 from django.contrib.auth.models import User
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+
 
 class AssetCategory(models.Model):
     AssetCategoryCode = models.CharField(max_length=100, verbose_name='کد خانواده تجهیز')
@@ -793,9 +796,9 @@ class WOTemplate(models.Model):
     WOTemplateCode = models.CharField(max_length=100, verbose_name='کد تناوب دستور کار')
     WOTemplateName = models.CharField(max_length=200, verbose_name='نام تناوب دستور کار')
     WOTemplateDurationDay = models.IntegerField(verbose_name='روز تناوب')
-    WOTemplateDurationHour = models.IntegerField(verbose_name='ساعت تناوب')
+    WOTemplateDurationHour = models.TimeField(verbose_name='ساعت تناوب')
     WOTemplateAlarmDay = models.IntegerField(verbose_name='روز اعلام تناوب')
-    WOTemplateAlarmHour = models.IntegerField(verbose_name='ساعت اعلام تناوب')
+    WOTemplateAlarmHour = models.TimeField(verbose_name='ساعت اعلام تناوب')
     DepartmentID = models.ForeignKey('Department', on_delete=models.CASCADE, blank=False, verbose_name='دپارتمان')
     WOTemplateTypeID = models.ForeignKey('WOTemplateType', on_delete=models.CASCADE, blank=False, verbose_name='نوع')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
@@ -814,6 +817,8 @@ class WOActivityTemplateTbl(models.Model):
     WOTemplateID = models.ForeignKey('WOTemplate', on_delete=models.CASCADE, blank=False, verbose_name='برنامه')
     AssetClassTaskID = models.ForeignKey('AssetClassTask', on_delete=models.CASCADE, blank=False,
                                            verbose_name='فعالیت')
+    AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.CASCADE, blank=False,
+                                           verbose_name='تجهیز')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -830,7 +835,7 @@ class WOTemplateSchualing(models.Model):
     WOTemplateSchualingStartDate = models.DateField(verbose_name='روز شروع برنامه')
     WOTemplateSchualingFinishDate = models.DateField(verbose_name='روز پایان برنامه')
     AmountFrequency = models.IntegerField(verbose_name='مقدار')
-    Status = models.BooleanField(verbose_name='وضعیت')
+    Status = models.BooleanField(default=False, verbose_name='وضعیت')
     WOTemplateID = models.ForeignKey('WOTemplate', on_delete=models.CASCADE, blank=False, verbose_name='دستور کار')
     FrequencyID = models.ForeignKey('Frequency', on_delete=models.CASCADE, blank=False, verbose_name='تناوب')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
@@ -844,11 +849,32 @@ class WOTemplateSchualing(models.Model):
     def __str__(self):
         return "{}-{}".format(self.WOTemplateID, self.FrequencyID)
 
+def save_WOTemplateSchualing(sender, instance, created, **kwargs):
+        if instance.Status == True:
+            cf = instance.FrequencyID.FrequencyCode
+            tis = instance.WOTemplateSchualingStartDate
+            while tis <= instance.WOTemplateSchualingFinishDate:
+                print('f: ',cf)
+                print(tis)
+                TemplateSchualingDate.objects.create(TemplateSchualingDate = tis ,WOTemplateSchualingID = instance )
+                if cf == 'D':
+                    tis = tis + timedelta(days=instance.AmountFrequency)
+                elif cf == 'W':
+                    tis = tis + timedelta(weeks=instance.AmountFrequency)
+                elif cf == 'M':
+                    tis = tis + relativedelta(months=instance.AmountFrequency)
+                elif cf == 'Y':
+                    tis = tis + relativedelta(years=instance.AmountFrequency)           
+
+
+post_save.connect(save_WOTemplateSchualing, sender=WOTemplateSchualing)
+
+
 
 class TemplateSchualingDate(models.Model):
     TemplateSchualingDate = models.DateField(verbose_name='روز برنامه')
-    StatusOfDo = models.CharField(max_length=100, verbose_name='وضعیت انجام')
     WOTemplateSchualingID = models.ForeignKey('WOTemplateSchualing', on_delete=models.CASCADE, blank=False, verbose_name='برنامه')
+    StatusOfDo = models.BooleanField(default=False, verbose_name='وضعیت انجام')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
 

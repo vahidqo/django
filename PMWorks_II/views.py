@@ -5,7 +5,8 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, \
-    AssetSubdivisionSparePart, PersonnelJobCategory, WorkRequestFailureCause
+    AssetSubdivisionSparePart, PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOTemplate, \
+    WOActivityTemplateTbl, TemplateSchualingDate
 
 from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetClassSubdivisionSerializer, \
     AssetClassSpecificDataSerializer, SpecificDataSerializer, FailureModeSerializer, LocationSerializer, \
@@ -15,7 +16,9 @@ from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetCla
     PersonnelJobCategorySerializer, TypeWrSerializer, WorkPrioritySerializer, SupplierSerializer, SupplierSpecificSerializer, \
     SupplierSpecificDataSerializer, AssetClassTaskSerializer, WorkRequestSerializer, WorkOrderSerializer, \
     WOSupplierSerializer, WOPersonnelSerializer, DelaySerializer, WODelaySerializer, WOSparePartSerializer, \
-    WOTaskSerializer, UserSerializer, AssetSubdivisionAssetSerializer, FailureCauseSerializer, WorkRequestFailureCauseSerializer
+    WOTaskSerializer, UserSerializer, AssetSubdivisionAssetSerializer, FailureCauseSerializer, WorkRequestFailureCauseSerializer, \
+    WOTemplateTypeSerializer, WOTemplateSerializer, WOActivityTemplateSerializer, WOTemplateSchualingSerializer, FrequencySerializer, \
+    TemplateSchualingDateSerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -929,6 +932,121 @@ class WRSpareRetrive(generics.RetrieveUpdateDestroyAPIView):
             return queryset.filter(id__in = spare.values('SparePartID'))
         return queryset
 
+class WOTemplateTypeView(generics.ListCreateAPIView):
+    serializer_class = WOTemplateTypeSerializer
+    queryset = WOTemplateType.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateTypeCode', 'WOTemplateTypeName', 'WOTemplateTypeDescription', ]
+
+
+class WOTemplateTypeCreate(generics.ListCreateAPIView):
+    serializer_class = WOTemplateTypeSerializer
+    queryset = WOTemplateType.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateTypeCode', 'WOTemplateTypeName', 'WOTemplateTypeDescription', ]
+
+
+class WOTemplateTypeRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WOTemplateTypeSerializer
+    queryset = WOTemplateType.objects.all()
+
+
+class WOTemplateView(generics.ListCreateAPIView):
+    serializer_class = WOTemplateSerializer
+    queryset = WOTemplate.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateDurationHour',
+                          'WOTemplateAlarmDay', 'WOTemplateAlarmHour', 'DepartmentID', 'WOTemplateTypeID', ]
+
+
+class WOTemplateCreate(generics.ListCreateAPIView):
+    serializer_class = WOTemplateSerializer
+    queryset = WOTemplate.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateDurationHour',
+                          'WOTemplateAlarmDay', 'WOTemplateAlarmHour', 'DepartmentID', 'WOTemplateTypeID', ]
+
+
+class WOTemplateRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WOTemplateSerializer
+    queryset = WOTemplate.objects.all()
+
+    
+class WOActivityTemplateView(generics.ListCreateAPIView):
+    serializer_class = WOActivityTemplateSerializer
+    queryset = WOActivityTemplateTbl.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateID', 'AssetClassTaskID', 'AssetSubdivisionID', ]
+
+
+class WOActivityTemplateCreate(generics.ListCreateAPIView):
+    serializer_class = WOActivityTemplateSerializer
+    queryset = WOActivityTemplateTbl.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateID', 'AssetClassTaskID', 'AssetSubdivisionID', ]
+
+
+class WOActivityTemplateRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WOActivityTemplateSerializer
+    queryset = WOActivityTemplateTbl.objects.all()
+
+
+class WOTemplateSchualingView(generics.ListCreateAPIView):
+    serializer_class = WOTemplateSchualingSerializer
+    queryset = WOTemplateSchualing.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
+                          'WOTemplateID', 'FrequencyID', ]
+
+
+class WOTemplateSchualingCreate(generics.ListCreateAPIView):
+    serializer_class = WOTemplateSchualingSerializer
+    queryset = WOTemplateSchualing.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
+                          'WOTemplateID', 'FrequencyID', ]
+
+class WOTemplateSchualingRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WOTemplateSchualingSerializer
+    queryset = WOTemplateSchualing.objects.all()
+
+
+class FrequencyView(generics.ListCreateAPIView):
+    serializer_class = FrequencySerializer
+    queryset = Frequency.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'FrequencyCode', 'FrequencyName', ]
+
+
+class FrequencyCreate(generics.ListCreateAPIView):
+    serializer_class = FrequencySerializer
+    queryset = Frequency.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'FrequencyCode', 'FrequencyName', ]
+
+
+class FrequencyRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = FrequencySerializer
+    queryset = Frequency.objects.all()
+
+class TemplateSchualingDateView(generics.ListCreateAPIView):
+    serializer_class = TemplateSchualingDateSerializer
+    queryset = TemplateSchualingDate.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo', ]
+
+
+class TemplateSchualingDateCreate(generics.ListCreateAPIView):
+    serializer_class = TemplateSchualingDateSerializer
+    queryset = TemplateSchualingDate.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo', ]
+
+
+class TemplateSchualingDateRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TemplateSchualingDateSerializer
+    queryset = TemplateSchualingDate.objects.all()
+
 
 class WRTaskView(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer
@@ -965,4 +1083,41 @@ class WRTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
         if asset:
             assets=WorkOrder.objects.filter(id = asset)
             return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
+        return queryset
+
+class TaskTempView(generics.ListCreateAPIView):
+    serializer_class = AssetClassTaskSerializer
+
+    def get_queryset(self):
+        queryset = AssetClassTask.objects.all()
+        asset=self.request.query_params.get('AssetSubdivisionID', '')
+        if asset:
+            assets=AssetSubdivision.objects.filter(id = asset)
+            return queryset.filter(AssetClassID = assets[0].AssetChildID)
+        return queryset
+
+
+class TaskTempCreate(generics.ListCreateAPIView):
+    serializer_class = AssetClassTaskSerializer
+
+    def get_queryset(self):
+        queryset = AssetClassTask.objects.all()
+        asset=self.request.query_params.get('AssetSubdivisionID', '')
+        if asset:
+            assets=AssetSubdivision.objects.filter(id = asset)
+            return queryset.filter(AssetClassID = assets[0].AssetChildID)
+        return queryset
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'TaskCode', 'TaskName', 'TaskDescription', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo',
+                  'Functor', 'TaskTypeID', 'JobCategoryID', 'AssetClassID', ]
+
+class TaskTempRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AssetClassTaskSerializer
+
+    def get_queryset(self):
+        queryset = AssetClassTask.objects.all()
+        asset=self.request.query_params.get('AssetSubdivisionID', '')
+        if asset:
+            assets=AssetSubdivision.objects.filter(id = asset)
+            return queryset.filter(AssetClassID = assets[0].AssetChildID)
         return queryset

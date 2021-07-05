@@ -439,8 +439,7 @@ class FrequencyAdmin(admin.ModelAdmin):
 @admin.register(WOTemplate)
 class WOTemplateAdmin(admin.ModelAdmin):
     list_display = (
-        'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateDurationHour', 'WOTemplateAlarmDay',
-        'WOTemplateAlarmHour', 'DepartmentID_Name', 'Create')
+        'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateAlarmDay', 'DepartmentID_Name', 'Create')
 
     def DepartmentID_Name(self, obj):
         return obj.DepartmentID.DepartmentName
