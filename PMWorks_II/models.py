@@ -1,13 +1,22 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django_jalali.db import models as jmodels
 from django.contrib.auth.models import User
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from rest_framework.authtoken.models import Token
+
+
+def create_auth_token(sender, instance, created, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+post_save.connect(create_auth_token, sender=settings.AUTH_USER_MODEL)
 
 
 class AssetCategory(models.Model):
-    AssetCategoryCode = models.CharField(max_length=100, verbose_name='کد خانواده تجهیز')
+    AssetCategoryCode = models.CharField(max_length=100, unique=True, verbose_name='کد خانواده تجهیز')
     AssetCategoryName = models.CharField(max_length=100, verbose_name='نام خانواده تجهیز')
     slug = models.SlugField(max_length=100)
     AssetClassFather = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, verbose_name='خانواده تجهیز پدر')
@@ -24,7 +33,7 @@ class AssetCategory(models.Model):
 
 
 class AssetClass(models.Model):
-    AssetClassCode = models.CharField(max_length=100, verbose_name='کد کلاس تجهیز')
+    AssetClassCode = models.CharField(max_length=100, unique=True, verbose_name='کد کلاس تجهیز')
     AssetClassName = models.CharField(max_length=200, verbose_name='نام کلاس تجیز')
     AssetCategoryID = models.ForeignKey('AssetCategory', on_delete=models.CASCADE, blank=False,
                                         verbose_name='خانواده تجیز')
@@ -61,9 +70,9 @@ class AssetClassSubdivision(models.Model):
 
 
 class FailureMode(models.Model):
-    FailureModeCode = models.CharField(max_length=100, verbose_name='کد نوع خرابی')
+    FailureModeCode = models.CharField(max_length=100, unique=True, verbose_name='کد نوع خرابی')
     FailureModeName = models.CharField(max_length=200, verbose_name='نام نوع حرابی')
-    FailureModeDescription = models.TextField(verbose_name='توضیحات')
+    FailureModeDescription = models.TextField(verbose_name='توضیحات', blank=True)
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.CASCADE, blank=False,
                                      verbose_name='کلاس تجهیز')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
@@ -97,8 +106,9 @@ class FailureCause(models.Model):
 
 
 class SpecificData(models.Model):
-    SpecificDataCode = models.CharField(max_length=100, verbose_name='کد ویژگی')
+    SpecificDataCode = models.CharField(max_length=100, unique=True, verbose_name='کد ویژگی')
     SpecificDataName = models.CharField(max_length=200, verbose_name='نام ویژگی')
+    Measurment = models.CharField(max_length=200, verbose_name='اندازه گيري')
     Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
 

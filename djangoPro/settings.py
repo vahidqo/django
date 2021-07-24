@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -87,10 +88,23 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'PMWorks_II.Pagination.ContentRangeHeaderPagination',
-    'PAGE_SIZE': 100,
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DATE_INPUT_FORMATS': ['iso-8601', '%Y-%m-%dT%H:%M:%S.%fZ']}
+##    'DEFAULT_PAGINATION_CLASS': 'PMWorks_II.Pagination.ContentRangeHeaderPagination',
+    'DEFAULT_PAGINATION_CLASS': 'PMWorks_II.Pagination.PageNumberWithPageSizePagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.OrderingFilter',
+                                'django_filters.rest_framework.DjangoFilterBackend',
+                                'rest_framework.filters.SearchFilter'],
+    'DATE_INPUT_FORMATS': ['iso-8601', '%Y-%m-%dT%H:%M:%S.%fZ'],
+##    'DEFAULT_AUTHENTICATION_CLASSES': [
+##        # SessionAuthentication is intentionally removed, see:
+##        # https://github.com/encode/django-rest-framework/issues/6104'
+##        'rest_framework.authentication.TokenAuthentication',
+##        'rest_framework_simplejwt.authentication.JWTAuthentication',
+##    ],
+##    'DEFAULT_PERMISSION_CLASSES': [
+##        'rest_framework.permissions.IsAuthenticated',
+##    ]
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

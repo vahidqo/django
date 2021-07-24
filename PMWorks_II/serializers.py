@@ -57,7 +57,7 @@ class FailureCauseSerializer(serializers.ModelSerializer):
 class SpecificDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpecificData
-        fields = ['id', 'SpecificDataCode', 'SpecificDataName']
+        fields = ['id', 'SpecificDataCode', 'SpecificDataName', 'Measurment']
 
 
 class JobCategorySerializer(serializers.ModelSerializer):
@@ -292,12 +292,22 @@ class WOActivityTemplateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+        
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'password',
-                  'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']
+                  'email', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined']
 
 
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+            instance.last_name = self.data['password']
+        instance.save()
+        return instance
+        
 class TemplateSchualingDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TemplateSchualingDate
