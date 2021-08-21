@@ -33,24 +33,24 @@ class NumberInFilter(django_filters.BaseInFilter, django_filters.NumberFilter):
 class AssetCatFath(filters.FilterSet):
     AssetClassFather = NumberInFilter(field_name='AssetClassFather', lookup_expr='in')
     AssetClassFather__isnull = filters.BooleanFilter(field_name='AssetClassFather', lookup_expr='isnull')
-    AssetCategoryCode = filters.CharFilter(field_name='AssetCategoryCode')
-    AssetCategoryName = filters.CharFilter(field_name='AssetCategoryName')
+    AssetCategoryCode = filters.CharFilter(field_name='AssetCategoryCode', lookup_expr='icontains')
+    AssetCategoryName = filters.CharFilter(field_name='AssetCategoryName', lookup_expr='icontains')
+    AssetClassFatherName = filters.CharFilter(field_name='AssetClassFather__AssetCategoryName', lookup_expr='icontains')
 
 
 class AssetCategoryView(generics.ListCreateAPIView):
     serializer_class = AssetCategorySerializer
     queryset = AssetCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetCategoryName', 'id', 'AssetClassFather__AssetCategoryName', 'AssetCategoryCode',]
+    filter_fields = {'AssetCategoryName': ['icontains'], 'id': ['exact'], 'AssetClassFather__AssetCategoryName': ['icontains'], 'AssetCategoryCode': ['icontains']}
     filter_class = AssetCatFath
     ordering_fields = ['AssetCategoryName', 'id', 'AssetClassFather__AssetCategoryName', 'AssetCategoryCode',]
-
 
 class AssetCategoryCreate(generics.ListCreateAPIView):
     serializer_class = AssetCategorySerializer
     queryset = AssetCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetCategoryName', 'id', 'AssetClassFather__AssetCategoryName', 'AssetCategoryCode',]
+    filter_fields = {'AssetCategoryName': ['icontains'], 'id': ['exact'], 'AssetClassFather__AssetCategoryName': ['icontains'], 'AssetCategoryCode': ['icontains']}
     filter_class = AssetCatFath
     ordering_fields = ['AssetCategoryName', 'id', 'AssetClassFather__AssetCategoryName', 'AssetCategoryCode',]
 
@@ -64,7 +64,7 @@ class AssetClassView(generics.ListCreateAPIView):
     serializer_class = AssetClassSerializer
     queryset = AssetClass.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetClassName', 'id', 'AssetClassCode', 'AssetCategoryID__AssetCategoryName', ]
+    filter_fields = {'AssetClassName': ['icontains'], 'id': ['exact'], 'AssetClassCode': ['icontains'], 'AssetCategoryID__AssetCategoryName': ['icontains'], 'AssetCategoryID': ['exact']}
     ordering_fields = ['AssetClassName', 'id', 'AssetClassCode', 'AssetCategoryID__AssetCategoryName', ]
 
 
@@ -72,9 +72,8 @@ class AssetClassCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassSerializer
     queryset = AssetClass.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetClassName', 'id', 'AssetClassCode', 'AssetCategoryID__AssetCategoryName', ]
+    filter_fields = {'AssetClassName': ['icontains'], 'id': ['exact'], 'AssetClassCode': ['icontains'], 'AssetCategoryID__AssetCategoryName': ['icontains'], 'AssetCategoryID': ['exact']}
     ordering_fields = ['AssetClassName', 'id', 'AssetClassCode', 'AssetCategoryID__AssetCategoryName', ]
-    
 
 class AssetClassRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AssetClassSerializer
@@ -85,7 +84,7 @@ class AssetClassSubdivisionView(generics.ListCreateAPIView):
     serializer_class = AssetClassSubdivisionSerializer
     queryset = AssetClassSubdivision.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetClassFatherID', 'id', 'AssetClassChildID', 'AssetClassFatherID__AssetClassName', 'AssetClassFatherID__AssetClassCode', 'AssetClassChildID__AssetClassName', 'AssetClassChildID__AssetClassCode', ]
+    filter_fields = {'AssetClassFatherID': ['exact'], 'id': ['exact'], 'AssetClassChildID': ['exact'], 'AssetClassFatherID__AssetClassName': ['icontains'], 'AssetClassFatherID__AssetClassCode': ['icontains'], 'AssetClassChildID__AssetClassName': ['icontains'], 'AssetClassChildID__AssetClassCode': ['icontains']}
     ordering_fields = ['AssetClassFatherID', 'id', 'AssetClassChildID', 'AssetClassFatherID__AssetClassName', 'AssetClassFatherID__AssetClassCode', 'AssetClassChildID__AssetClassName', 'AssetClassChildID__AssetClassCode', ]
 
 
@@ -93,7 +92,7 @@ class AssetClassSubdivisionCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassSubdivisionSerializer
     queryset = AssetClassSubdivision.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetClassFatherID', 'id', 'AssetClassChildID', 'AssetClassFatherID__AssetClassName', 'AssetClassFatherID__AssetClassCode', 'AssetClassChildID__AssetClassName', 'AssetClassChildID__AssetClassCode', ]
+    filter_fields = {'AssetClassFatherID': ['exact'], 'id': ['exact'], 'AssetClassChildID': ['exact'], 'AssetClassFatherID__AssetClassName': ['icontains'], 'AssetClassFatherID__AssetClassCode': ['icontains'], 'AssetClassChildID__AssetClassName': ['icontains'], 'AssetClassChildID__AssetClassCode': ['icontains']}
     ordering_fields = ['AssetClassFatherID', 'id', 'AssetClassChildID', 'AssetClassFatherID__AssetClassName', 'AssetClassFatherID__AssetClassCode', 'AssetClassChildID__AssetClassName', 'AssetClassChildID__AssetClassCode', ]
 
 
@@ -106,7 +105,7 @@ class AssetClassSpecificDataView(generics.ListCreateAPIView):
     serializer_class = AssetClassSpecificDataSerializer
     queryset = AssetClassSpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetClassID', 'id', 'SpecificDataID', ]
+    filter_fields = {'AssetClassID': ['exact'], 'id': ['exact'], 'SpecificDataID': ['exact'], 'SpecificDataID__SpecificDataName': ['icontains'], 'SpecificDataID__SpecificDataCode': ['icontains'], 'SpecificDataID__Measurment': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -114,7 +113,7 @@ class AssetClassSpecificDataCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassSpecificDataSerializer
     queryset = AssetClassSpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['AssetClassID', 'id', 'SpecificDataID', ]
+    filter_fields = {'AssetClassID': ['exact'], 'id': ['exact'], 'SpecificDataID': ['exact'], 'SpecificDataID__SpecificDataName': ['icontains'], 'SpecificDataID__SpecificDataCode': ['icontains'], 'SpecificDataID__Measurment': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -127,7 +126,7 @@ class SpecificDataView(generics.ListCreateAPIView):
     serializer_class = SpecificDataSerializer
     queryset = SpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['SpecificDataCode', 'id', 'SpecificDataName', 'Measurment', ]
+    filter_fields = {'SpecificDataCode': ['icontains'], 'id': ['exact'], 'SpecificDataName': ['icontains'], 'Measurment': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -135,7 +134,7 @@ class SpecificDataCreate(generics.ListCreateAPIView):
     serializer_class = SpecificDataSerializer
     queryset = SpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['SpecificDataCode', 'id', 'SpecificDataName', 'Measurment', ]
+    filter_fields = {'SpecificDataCode': ['icontains'], 'id': ['exact'], 'SpecificDataName': ['icontains'], 'Measurment': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -148,7 +147,7 @@ class FailureModeView(generics.ListCreateAPIView):
     serializer_class = FailureModeSerializer
     queryset = FailureMode.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FailureModeCode', 'FailureModeName', 'FailureModeDescription', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains'], 'FailureModeDescription': ['icontains'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -156,7 +155,7 @@ class FailureModeCreate(generics.ListCreateAPIView):
     serializer_class = FailureModeSerializer
     queryset = FailureMode.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FailureModeCode', 'FailureModeName', 'FailureModeDescription', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains'], 'FailureModeDescription': ['icontains'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -168,7 +167,7 @@ class FailureCauseView(generics.ListCreateAPIView):
     serializer_class = FailureCauseSerializer
     queryset = FailureCause.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FailureCauseCode', 'FailureCauseName', 'FailureCauseDescription', 'FailureModeID', ]
+    filter_fields = {'id': ['exact'], 'FailureCauseCode': ['icontains'], 'FailureCauseName': ['icontains'], 'FailureCauseDescription': ['icontains'], 'FailureModeID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -176,7 +175,7 @@ class FailureCauseCreate(generics.ListCreateAPIView):
     serializer_class = FailureCauseSerializer
     queryset = FailureCause.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FailureCauseCode', 'FailureCauseName', 'FailureCauseDescription', 'FailureModeID', ]
+    filter_fields = {'id': ['exact'], 'FailureCauseCode': ['icontains'], 'FailureCauseName': ['icontains'], 'FailureCauseDescription': ['icontains'], 'FailureModeID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -193,7 +192,7 @@ class LocationView(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'LocationCode', 'LocationName', 'LocationFatherID', ]
+    filter_fields = {'id': ['exact'], 'LocationCode': ['icontains'], 'LocationName': ['icontains'], 'LocationFatherID': ['exact']}
     filter_class = LocationFath
     ordering_fields = '__all__'
 
@@ -202,7 +201,7 @@ class LocationCreate(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'LocationCode', 'LocationName', 'LocationFatherID', ]
+    filter_fields = {'id': ['exact'], 'LocationCode': ['icontains'], 'LocationName': ['icontains'], 'LocationFatherID': ['exact']}
     filter_class = LocationFath
     ordering_fields = '__all__'
 
@@ -216,7 +215,7 @@ class DocumentView(generics.ListCreateAPIView):
     serializer_class = DocumentSerializer
     queryset = Document.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DocumentCode', 'DocumentName', 'DocumentDescription', ]
+    filter_fields = {'id': ['exact'], 'DocumentCode': ['icontains'], 'DocumentName': ['icontains'], 'DocumentDescription': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -224,7 +223,7 @@ class DocumentCreate(generics.ListCreateAPIView):
     serializer_class = DocumentSerializer
     queryset = Document.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DocumentCode', 'DocumentName', 'DocumentDescription', ]
+    filter_fields = {'id': ['exact'], 'DocumentCode': ['icontains'], 'DocumentName': ['icontains'], 'DocumentDescription': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -237,7 +236,7 @@ class AssetPriorityView(generics.ListCreateAPIView):
     serializer_class = AssetPrioritySerializer
     queryset = AssetPriority.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetPriorityCode', 'AssetPriorityName', 'AssetPriorityValue', ]
+    filter_fields = {'id': ['exact'], 'AssetPriorityCode': ['icontains'], 'AssetPriorityName': ['icontains'], 'AssetPriorityValue': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -245,7 +244,7 @@ class AssetPriorityCreate(generics.ListCreateAPIView):
     serializer_class = AssetPrioritySerializer
     queryset = AssetPriority.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetPriorityCode', 'AssetPriorityName', 'AssetPriorityValue', ]
+    filter_fields = {'id': ['exact'], 'AssetPriorityCode': ['icontains'], 'AssetPriorityName': ['icontains'], 'AssetPriorityValue': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -258,7 +257,7 @@ class AssetClassDocumentView(generics.ListCreateAPIView):
     serializer_class = AssetClassDocumentSerializer
     queryset = AssetClassDocument.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetClassID', 'DocumentID', ]
+    filter_fields = {'id': ['exact'], 'AssetClassID': ['exact'], 'DocumentID': ['exact'], 'DocumentID__DocumentName': ['icontains'], 'DocumentID__DocumentCode': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -266,7 +265,7 @@ class AssetClassDocumentCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassDocumentSerializer
     queryset = AssetClassDocument.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetClassID', 'DocumentID', ]
+    filter_fields = {'id': ['exact'], 'AssetClassID': ['exact'], 'DocumentID': ['exact'], 'DocumentID__DocumentName': ['icontains'], 'DocumentID__DocumentCode': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -279,8 +278,8 @@ class AssetView(generics.ListCreateAPIView):
     serializer_class = AssetSerializer
     queryset = Asset.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetCode', 'AssetName', 'InstallationDate', 'AssetPriorityID', 'LocationID',
-                        'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains'], 'InstallationDate': ['icontains'], 'AssetPriorityID': ['exact'], 'LocationID': ['exact'],
+                        'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -288,8 +287,8 @@ class AssetCreate(generics.ListCreateAPIView):
     serializer_class = AssetSerializer
     queryset = Asset.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetCode', 'AssetName', 'InstallationDate', 'AssetPriorityID', 'LocationID',
-                        'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains'], 'InstallationDate': ['icontains'], 'AssetPriorityID': ['exact'], 'LocationID': ['exact'],
+                        'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -302,7 +301,7 @@ class AssetSpecificDataView(generics.ListCreateAPIView):
     serializer_class = AssetSpecificDataSerializer
     queryset = AssetSpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetSubdivisionID', 'SpecificDataID', 'SpecificAmount', ]
+    filter_fields = {'id': ['exact'], 'AssetSubdivisionID': ['exact'], 'SpecificDataID': ['exact'], 'SpecificAmount': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -310,7 +309,7 @@ class AssetSpecificDataCreate(generics.ListCreateAPIView):
     serializer_class = AssetSpecificDataSerializer
     queryset = AssetSpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetSubdivisionID', 'SpecificDataID', 'SpecificAmount', ]
+    filter_fields = {'id': ['exact'], 'AssetSubdivisionID': ['exact'], 'SpecificDataID': ['exact'], 'SpecificAmount': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -323,7 +322,7 @@ class AssetSubdivisionView(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionSerializer
     queryset = AssetSubdivision.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetID', 'AssetChildID', 'AssetSubdivisionFatherID','tree', 'fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName'] 
+    filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'], 'fakelocation': ['exact'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'], 'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains']} 
     ordering_fields = '__all__'
 
 
@@ -331,7 +330,7 @@ class AssetSubdivisionCreate(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionSerializer
     queryset = AssetSubdivision.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetID', 'AssetChildID', 'AssetSubdivisionFatherID','tree', 'fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName']
+    filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'], 'fakelocation': ['exact'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'], 'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains']} 
     ordering_fields = '__all__'
 
 
@@ -344,7 +343,7 @@ class SparePartDimensionView(generics.ListCreateAPIView):
     serializer_class = SparePartDimensionSerializer
     queryset = SparePartDimension.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartDimensionCode', 'SparePartDimensionName', ]
+    filter_fields = {'id': ['exact'], 'SparePartDimensionCode': ['icontains'], 'SparePartDimensionName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -352,7 +351,7 @@ class SparePartDimensionCreate(generics.ListCreateAPIView):
     serializer_class = SparePartDimensionSerializer
     queryset = SparePartDimension.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartDimensionCode', 'SparePartDimensionName', ]
+    filter_fields = {'id': ['exact'], 'SparePartDimensionCode': ['icontains'], 'SparePartDimensionName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -370,7 +369,7 @@ class SparePartCategoryView(generics.ListCreateAPIView):
     serializer_class = SparePartCategorySerializer
     queryset = SparePartCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartCategoryCode', 'SparePartCategoryName', 'SparePartCategoryFather',]
+    filter_fields = {'id': ['exact'], 'SparePartCategoryCode': ['icontains'], 'SparePartCategoryName': ['icontains'], 'SparePartCategoryFather': ['exact']}
     filter_class = SparePartCatFath
     ordering_fields = '__all__'
 
@@ -379,7 +378,7 @@ class SparePartCategoryCreate(generics.ListCreateAPIView):
     serializer_class = SparePartCategorySerializer
     queryset = SparePartCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartCategoryCode', 'SparePartCategoryName', 'SparePartCategoryFather',]
+    filter_fields = {'id': ['exact'], 'SparePartCategoryCode': ['icontains'], 'SparePartCategoryName': ['icontains'], 'SparePartCategoryFather': ['exact']}
     filter_class = SparePartCatFath
     ordering_fields = '__all__'
 
@@ -393,7 +392,7 @@ class SparePartView(generics.ListCreateAPIView):
     serializer_class = SparePartSerializer
     queryset = SparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartCode', 'SparePartName', 'SparePartCategoryID', 'SparePartDimensionID', ]
+    filter_fields = {'id': ['exact'], 'SparePartCode': ['icontains'], 'SparePartName': ['icontains'], 'SparePartCategoryID': ['exact'], 'SparePartDimensionID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -401,7 +400,7 @@ class SparePartCreate(generics.ListCreateAPIView):
     serializer_class = SparePartSerializer
     queryset = SparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartCode', 'SparePartName', 'SparePartCategoryID', 'SparePartDimensionID', ]
+    filter_fields = {'id': ['exact'], 'SparePartCode': ['icontains'], 'SparePartName': ['icontains'], 'SparePartCategoryID': ['exact'], 'SparePartDimensionID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -414,7 +413,7 @@ class AssetSubdivisionSparePartView(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionSparePartSerializer
     queryset = AssetSubdivisionSparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetSubdivisionID', 'SparePartID', ]
+    filter_fields = {'id': ['exact'], 'AssetSubdivisionID': ['exact'], 'SparePartID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -422,7 +421,7 @@ class AssetSubdivisionSparePartCreate(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionSparePartSerializer
     queryset = AssetSubdivisionSparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'AssetSubdivisionID', 'SparePartID', ]
+    filter_fields = {'id': ['exact'], 'AssetSubdivisionID': ['exact'], 'SparePartID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -434,7 +433,7 @@ class TaskTypeView(generics.ListCreateAPIView):
     serializer_class = TaskTypeSerializer
     queryset = TaskType.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TaskTypeCode', 'TaskTypeName', 'TaskTypeDescription', ]
+    filter_fields = {'id': ['exact'], 'TaskTypeCode': ['icontains'], 'TaskTypeName': ['icontains'], 'TaskTypeDescription': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -442,7 +441,7 @@ class TaskTypeCreate(generics.ListCreateAPIView):
     serializer_class = TaskTypeSerializer
     queryset = TaskType.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TaskTypeCode', 'TaskTypeName', 'TaskTypeDescription', ]
+    filter_fields = {'id': ['exact'], 'TaskTypeCode': ['icontains'], 'TaskTypeName': ['icontains'], 'TaskTypeDescription': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -455,7 +454,7 @@ class JobCategoryView(generics.ListCreateAPIView):
     serializer_class = JobCategorySerializer
     queryset = JobCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'JobCategoryCode', 'JobCategoryName', ]
+    filter_fields = {'id': ['exact'], 'JobCategoryCode': ['icontains'], 'JobCategoryName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -463,7 +462,7 @@ class JobCategoryCreate(generics.ListCreateAPIView):
     serializer_class = JobCategorySerializer
     queryset = JobCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'JobCategoryCode', 'JobCategoryName', ]
+    filter_fields = {'id': ['exact'], 'JobCategoryCode': ['icontains'], 'JobCategoryName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -476,7 +475,7 @@ class DepartmentView(generics.ListCreateAPIView):
     serializer_class = DepartmentSerializer
     queryset = Department.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DepartmentCode', 'DepartmentName', ]
+    filter_fields = {'id': ['exact'], 'DepartmentCode': ['icontains'], 'DepartmentName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -484,7 +483,7 @@ class DepartmentCreate(generics.ListCreateAPIView):
     serializer_class = DepartmentSerializer
     queryset = Department.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DepartmentCode', 'DepartmentName', ]
+    filter_fields = {'id': ['exact'], 'DepartmentCode': ['icontains'], 'DepartmentName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -497,8 +496,8 @@ class PersonnelView(generics.ListCreateAPIView):
     serializer_class = PersonnelSerializer
     queryset = Personnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'PersonnelCode', 'PersonnelNetCode', 'PersonnelName', 'PersonnelFamily', 'PersonnelMobile',
-                  'DepartmentID', ]
+    filter_fields = {'id': ['exact'], 'PersonnelCode': ['icontains'], 'PersonnelNetCode': ['icontains'], 'PersonnelName': ['icontains'], 'PersonnelFamily': ['icontains'], 'PersonnelMobile': ['icontains'],
+                  'DepartmentID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -506,8 +505,8 @@ class PersonnelCreate(generics.ListCreateAPIView):
     serializer_class = PersonnelSerializer
     queryset = Personnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'PersonnelCode', 'PersonnelNetCode', 'PersonnelName', 'PersonnelFamily', 'PersonnelMobile',
-                  'DepartmentID', ]
+    filter_fields = {'id': ['exact'], 'PersonnelCode': ['icontains'], 'PersonnelNetCode': ['icontains'], 'PersonnelName': ['icontains'], 'PersonnelFamily': ['icontains'], 'PersonnelMobile': ['icontains'],
+                  'DepartmentID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -520,7 +519,7 @@ class PersonnelJobCategoryView(generics.ListCreateAPIView):
     serializer_class = PersonnelJobCategorySerializer
     queryset = PersonnelJobCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'PersonnelID', 'JobCategoryID', ]
+    filter_fields = {'id': ['exact'], 'PersonnelID': ['exact'], 'JobCategoryID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -528,7 +527,7 @@ class PersonnelJobCategoryCreate(generics.ListCreateAPIView):
     serializer_class = PersonnelJobCategorySerializer
     queryset = PersonnelJobCategory.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'PersonnelID', 'JobCategoryID', ]
+    filter_fields = {'id': ['exact'], 'PersonnelID': ['exact'], 'JobCategoryID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -541,7 +540,7 @@ class TypeWrView(generics.ListCreateAPIView):
     serializer_class = TypeWrSerializer
     queryset = TypeWr.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TypeWrCode', 'TypeWrName', ]
+    filter_fields = {'id': ['exact'], 'TypeWrCode': ['icontains'], 'TypeWrName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -549,7 +548,7 @@ class TypeWrCreate(generics.ListCreateAPIView):
     serializer_class = TypeWrSerializer
     queryset = TypeWr.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TypeWrCode', 'TypeWrName', ]
+    filter_fields = {'id': ['exact'], 'TypeWrCode': ['icontains'], 'TypeWrName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -562,7 +561,7 @@ class WorkPriorityView(generics.ListCreateAPIView):
     serializer_class = WorkPrioritySerializer
     queryset = WorkPriority.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkPriorityCode', 'WorkPriorityName', 'WorkPriorityValue', ]
+    filter_fields = {'id': ['exact'], 'WorkPriorityCode': ['icontains'], 'WorkPriorityName': ['icontains'], 'WorkPriorityValue': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -570,7 +569,7 @@ class WorkPriorityCreate(generics.ListCreateAPIView):
     serializer_class = WorkPrioritySerializer
     queryset = WorkPriority.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkPriorityCode', 'WorkPriorityName', 'WorkPriorityValue', ]
+    filter_fields = {'id': ['exact'], 'WorkPriorityCode': ['icontains'], 'WorkPriorityName': ['icontains'], 'WorkPriorityValue': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -583,7 +582,7 @@ class SupplierView(generics.ListCreateAPIView):
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SupplierCode', 'SupplierName', ]
+    filter_fields = {'id': ['exact'], 'SupplierCode': ['icontains'], 'SupplierName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -591,7 +590,7 @@ class SupplierCreate(generics.ListCreateAPIView):
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SupplierCode', 'SupplierName', ]
+    filter_fields = {'id': ['exact'], 'SupplierCode': ['icontains'], 'SupplierName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -604,7 +603,7 @@ class SupplierSpecificView(generics.ListCreateAPIView):
     serializer_class = SupplierSpecificSerializer
     queryset = SupplierSpecific.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SupplierSpecificCode', 'SupplierSpecificName', ]
+    filter_fields = {'id': ['exact'], 'SupplierSpecificCode': ['icontains'], 'SupplierSpecificName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -612,7 +611,7 @@ class SupplierSpecificCreate(generics.ListCreateAPIView):
     serializer_class = SupplierSpecificSerializer
     queryset = SupplierSpecific.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SupplierSpecificCode', 'SupplierSpecificName', ]
+    filter_fields = {'id': ['exact'], 'SupplierSpecificCode': ['icontains'], 'SupplierSpecificName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -625,7 +624,7 @@ class SupplierSpecificDataView(generics.ListCreateAPIView):
     serializer_class = SupplierSpecificDataSerializer
     queryset = SupplierSpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SupplierID', 'SupplierSpecificID', 'SpecificAmount', ]
+    filter_fields = {'id': ['exact'], 'SupplierID': ['exact'], 'SupplierSpecificID': ['exact'], 'SpecificAmount': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -633,7 +632,7 @@ class SupplierSpecificDataCreate(generics.ListCreateAPIView):
     serializer_class = SupplierSpecificDataSerializer
     queryset = SupplierSpecificData.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SupplierID', 'SupplierSpecificID', 'SpecificAmount', ]
+    filter_fields = {'id': ['exact'], 'SupplierID': ['exact'], 'SupplierSpecificID': ['exact'], 'SpecificAmount': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -646,8 +645,8 @@ class AssetClassTaskView(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer
     queryset = AssetClassTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TaskCode', 'TaskName', 'TaskDescription', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo',
-                  'Functor', 'TaskTypeID', 'JobCategoryID', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -655,8 +654,8 @@ class AssetClassTaskCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer
     queryset = AssetClassTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TaskCode', 'TaskName', 'TaskDescription', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo',
-                  'Functor', 'TaskTypeID', 'JobCategoryID', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -669,8 +668,8 @@ class WorkRequestView(generics.ListCreateAPIView):
     serializer_class = WorkRequestSerializer
     queryset = WorkRequest.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WRDate', 'WRDateOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
-                        'WorkPriorityID', 'TypeWrID', ]
+    filter_fields = {'id': ['exact'], 'WRDate': ['icontains'], 'WRDateOfRegistration': ['icontains'], 'AssetSubdivisionID': ['exact'], 'FailureModeID': ['exact'],
+                        'WorkPriorityID': ['exact'], 'TypeWrID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -678,8 +677,8 @@ class WorkRequestCreate(generics.ListCreateAPIView):
     serializer_class = WorkRequestSerializer
     queryset = WorkRequest.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WRDate', 'WRDateOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
-                        'WorkPriorityID', 'TypeWrID', ]
+    filter_fields = {'id': ['exact'], 'WRDate': ['icontains'], 'WRDateOfRegistration': ['icontains'], 'AssetSubdivisionID': ['exact'], 'FailureModeID': ['exact'],
+                        'WorkPriorityID': ['exact'], 'TypeWrID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -692,7 +691,7 @@ class WorkOrderView(generics.ListCreateAPIView):
     serializer_class = WorkOrderSerializer
     queryset = WorkOrder.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', ]
+    filter_fields = {'id': ['exact'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'], 'WorkRequestID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -700,7 +699,7 @@ class WorkOrderCreate(generics.ListCreateAPIView):
     serializer_class = WorkOrderSerializer
     queryset = WorkOrder.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', ]
+    filter_fields = {'id': ['exact'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'], 'WorkRequestID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -713,7 +712,7 @@ class WOSupplierView(generics.ListCreateAPIView):
     serializer_class = WOSupplierSerializer
     queryset = WOSupplier.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkStartDate', 'WorkFinishDate', 'WorkOrderID', 'SupplierID', ]
+    filter_fields = {'id': ['exact'], 'WorkStartDate': ['icontains'], 'WorkFinishDate': ['icontains'], 'WorkOrderID': ['exact'], 'SupplierID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -721,7 +720,7 @@ class WOSupplierCreate(generics.ListCreateAPIView):
     serializer_class = WOSupplierSerializer
     queryset = WOSupplier.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkStartDate', 'WorkFinishDate', 'WorkOrderID', 'SupplierID', ]
+    filter_fields = {'id': ['exact'], 'WorkStartDate': ['icontains'], 'WorkFinishDate': ['icontains'], 'WorkOrderID': ['exact'], 'SupplierID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -734,7 +733,7 @@ class WOPersonnelView(generics.ListCreateAPIView):
     serializer_class = WOPersonnelSerializer
     queryset = WOPersonnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkDate', 'WorkTime', 'WorkOrderID', 'PersonnelID', ]
+    filter_fields = {'id': ['exact'], 'WorkDate': ['icontains'], 'WorkTime': ['icontains'], 'WorkOrderID': ['exact'], 'PersonnelID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -742,7 +741,7 @@ class WOPersonnelCreate(generics.ListCreateAPIView):
     serializer_class = WOPersonnelSerializer
     queryset = WOPersonnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkDate', 'WorkTime', 'WorkOrderID', 'PersonnelID', ]
+    filter_fields = {'id': ['exact'], 'WorkDate': ['icontains'], 'WorkTime': ['icontains'], 'WorkOrderID': ['exact'], 'PersonnelID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -755,7 +754,7 @@ class DelayView(generics.ListCreateAPIView):
     serializer_class = DelaySerializer
     queryset = Delay.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DelayCode', 'DelayName', ]
+    filter_fields = {'id': ['exact'], 'DelayCode': ['icontains'], 'DelayName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -763,7 +762,7 @@ class DelayCreate(generics.ListCreateAPIView):
     serializer_class = DelaySerializer
     queryset = Delay.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DelayCode', 'DelayName', ]
+    filter_fields = {'id': ['exact'], 'DelayCode': ['icontains'], 'DelayName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -776,7 +775,7 @@ class WODelayView(generics.ListCreateAPIView):
     serializer_class = WODelaySerializer
     queryset = WODelay.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DayAmount', 'HourAmount', 'WODelayDescription', 'WorkOrderID', 'DelayID', ]
+    filter_fields = {'id': ['exact'], 'DayAmount': ['icontains'], 'HourAmount': ['icontains'], 'WODelayDescription': ['icontains'], 'WorkOrderID': ['exact'], 'DelayID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -784,7 +783,7 @@ class WODelayCreate(generics.ListCreateAPIView):
     serializer_class = WODelaySerializer
     queryset = WODelay.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'DayAmount', 'HourAmount', 'WODelayDescription', 'WorkOrderID', 'DelayID', ]
+    filter_fields = {'id': ['exact'], 'DayAmount': ['icontains'], 'HourAmount': ['icontains'], 'WODelayDescription': ['icontains'], 'WorkOrderID': ['exact'], 'DelayID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -797,7 +796,7 @@ class WOSparePartView(generics.ListCreateAPIView):
     serializer_class = WOSparePartSerializer
     queryset = WOSparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkOrderID', 'SparePartID', 'SparePartAmount', ]
+    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'SparePartID': ['exact'], 'SparePartAmount': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -805,7 +804,7 @@ class WOSparePartCreate(generics.ListCreateAPIView):
     serializer_class = WOSparePartSerializer
     queryset = WOSparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkOrderID', 'SparePartID', 'SparePartAmount', ]
+    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'SparePartID': ['exact'], 'SparePartAmount': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -818,7 +817,7 @@ class WOTaskView(generics.ListCreateAPIView):
     serializer_class = WOTaskSerializer
     queryset = WOTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', ]
+    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -826,7 +825,7 @@ class WOTaskCreate(generics.ListCreateAPIView):
     serializer_class = WOTaskSerializer
     queryset = WOTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', ]
+    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -838,8 +837,8 @@ class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'username', 'first_name', 'last_name', 'password',
-                  'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', ]
+    filter_fields = {'id': ['exact'], 'username': ['icontains'], 'first_name': ['icontains'], 'last_name': ['icontains'], 'password': ['exact'],
+                  'email': ['icontains'], 'groups': ['icontains'], 'user_permissions': ['icontains'], 'is_staff': ['icontains'], 'is_active': ['icontains'], 'is_superuser': ['icontains'], 'last_login': ['icontains'], 'date_joined': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -847,8 +846,8 @@ class UserCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'username', 'first_name', 'last_name', 'password',
-                  'email', 'groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', ]
+    filter_fields = {'id': ['exact'], 'username': ['icontains'], 'first_name': ['icontains'], 'last_name': ['icontains'], 'password': ['exact'],
+                  'email': ['icontains'], 'groups': ['icontains'], 'user_permissions': ['icontains'], 'is_staff': ['icontains'], 'is_active': ['icontains'], 'is_superuser': ['icontains'], 'last_login': ['icontains'], 'date_joined': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -882,7 +881,7 @@ class FailureAssetModeCreate(generics.ListCreateAPIView):
             return queryset.filter(AssetClassID = assetclass[0].AssetChildID.id)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FailureModeCode', 'FailureModeName', 'FailureModeDescription', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains'], 'FailureModeDescription': ['icontains'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -902,7 +901,7 @@ class AssetSubdivisionAssetView(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionAssetSerializer
     queryset = AssetSubdivision.objects.all().values('id','AssetID__AssetName','AssetID__AssetCode','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id','AssetID__AssetName','AssetID__AssetCode','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', ]
+    filter_fields = {'id': ['exact'],'AssetID__AssetName': ['icontains'],'AssetID__AssetCode': ['icontains'],'AssetSubdivisionFatherID': ['exact'],'AssetID': ['exact'],'AssetChildID': ['exact'],'tree': ['exact'],'fakelocation': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -910,7 +909,7 @@ class AssetSubdivisionAssetCreate(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionAssetSerializer
     queryset = AssetSubdivision.objects.all().values('id','AssetID__AssetName','AssetID__AssetCode','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id','AssetID__AssetName','AssetID__AssetCode','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', ]
+    filter_fields = {'id': ['exact'],'AssetID__AssetName': ['icontains'],'AssetID__AssetCode': ['icontains'],'AssetSubdivisionFatherID': ['exact'],'AssetID': ['exact'],'AssetChildID': ['exact'],'tree': ['exact'],'fakelocation': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -923,7 +922,7 @@ class WorkRequestFailureCauseView(generics.ListCreateAPIView):
     serializer_class = WorkRequestFailureCauseSerializer
     queryset = WorkRequestFailureCause.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['WorkRequestID', 'id', 'FailureCauseID', ]
+    filter_fields = {'WorkRequestID': ['exact'], 'id': ['exact'], 'FailureCauseID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -931,7 +930,7 @@ class WorkRequestFailureCauseCreate(generics.ListCreateAPIView):
     serializer_class = WorkRequestFailureCauseSerializer
     queryset = WorkRequestFailureCause.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['WorkRequestID', 'id', 'FailureCauseID', ]
+    filter_fields = {'WorkRequestID': ['exact'], 'id': ['exact'], 'FailureCauseID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -965,7 +964,7 @@ class WRCauseCreate(generics.ListCreateAPIView):
             return queryset.filter(FailureModeID = fmode[0].FailureModeID)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FailureCauseCode', 'FailureCauseName', 'FailureModeID', ]
+    filter_fields = {'id': ['exact'], 'FailureCauseCode': ['icontains'], 'FailureCauseName': ['icontains'], 'FailureModeID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1008,7 +1007,7 @@ class WRSpareCreate(generics.ListCreateAPIView):
             return queryset.filter(id__in = spare.values('SparePartID'))
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'SparePartCode', 'SparePartName', 'SparePartCategoryID', 'SparePartDimensionID', ]
+    filter_fields = {'id': ['exact'], 'SparePartCode': ['icontains'], 'SparePartName': ['icontains'], 'SparePartCategoryID': ['exact'], 'SparePartDimensionID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1028,7 +1027,7 @@ class WOTemplateTypeView(generics.ListCreateAPIView):
     serializer_class = WOTemplateTypeSerializer
     queryset = WOTemplateType.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateTypeCode', 'WOTemplateTypeName', 'WOTemplateTypeDescription', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateTypeCode': ['icontains'], 'WOTemplateTypeName': ['icontains'], 'WOTemplateTypeDescription': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -1036,7 +1035,7 @@ class WOTemplateTypeCreate(generics.ListCreateAPIView):
     serializer_class = WOTemplateTypeSerializer
     queryset = WOTemplateType.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateTypeCode', 'WOTemplateTypeName', 'WOTemplateTypeDescription', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateTypeCode': ['icontains'], 'WOTemplateTypeName': ['icontains'], 'WOTemplateTypeDescription': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -1049,8 +1048,8 @@ class WOTemplateView(generics.ListCreateAPIView):
     serializer_class = WOTemplateSerializer
     queryset = WOTemplate.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateDurationHour',
-                          'WOTemplateAlarmDay', 'WOTemplateAlarmHour', 'DepartmentID', 'WOTemplateTypeID', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateCode': ['icontains'], 'WOTemplateName': ['icontains'], 'WOTemplateDurationDay': ['icontains'], 'WOTemplateDurationHour': ['icontains'],
+                          'WOTemplateAlarmDay': ['icontains'], 'WOTemplateAlarmHour': ['icontains'], 'DepartmentID': ['exact'], 'WOTemplateTypeID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1058,8 +1057,8 @@ class WOTemplateCreate(generics.ListCreateAPIView):
     serializer_class = WOTemplateSerializer
     queryset = WOTemplate.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateCode', 'WOTemplateName', 'WOTemplateDurationDay', 'WOTemplateDurationHour',
-                          'WOTemplateAlarmDay', 'WOTemplateAlarmHour', 'DepartmentID', 'WOTemplateTypeID', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateCode': ['icontains'], 'WOTemplateName': ['icontains'], 'WOTemplateDurationDay': ['icontains'], 'WOTemplateDurationHour': ['icontains'],
+                          'WOTemplateAlarmDay': ['icontains'], 'WOTemplateAlarmHour': ['icontains'], 'DepartmentID': ['exact'], 'WOTemplateTypeID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1072,7 +1071,7 @@ class WOActivityTemplateView(generics.ListCreateAPIView):
     serializer_class = WOActivityTemplateSerializer
     queryset = WOActivityTemplateTbl.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateID', 'AssetClassTaskID', 'AssetSubdivisionID', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateID': ['exact'], 'AssetClassTaskID': ['exact'], 'AssetSubdivisionID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1080,7 +1079,7 @@ class WOActivityTemplateCreate(generics.ListCreateAPIView):
     serializer_class = WOActivityTemplateSerializer
     queryset = WOActivityTemplateTbl.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateID', 'AssetClassTaskID', 'AssetSubdivisionID', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateID': ['exact'], 'AssetClassTaskID': ['exact'], 'AssetSubdivisionID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1093,8 +1092,8 @@ class WOTemplateSchualingView(generics.ListCreateAPIView):
     serializer_class = WOTemplateSchualingSerializer
     queryset = WOTemplateSchualing.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
-                          'WOTemplateID', 'FrequencyID', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateSchualingStartDate': ['icontains'], 'WOTemplateSchualingFinishDate': ['icontains'], 'AmountFrequency': ['icontains'], 'Status': ['icontains'],
+                          'WOTemplateID': ['exact'], 'FrequencyID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -1102,8 +1101,8 @@ class WOTemplateSchualingCreate(generics.ListCreateAPIView):
     serializer_class = WOTemplateSchualingSerializer
     queryset = WOTemplateSchualing.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
-                          'WOTemplateID', 'FrequencyID', ]
+    filter_fields = {'id': ['exact'], 'WOTemplateSchualingStartDate': ['icontains'], 'WOTemplateSchualingFinishDate': ['icontains'], 'AmountFrequency': ['icontains'], 'Status': ['icontains'],
+                          'WOTemplateID': ['exact'], 'FrequencyID': ['exact']}
     ordering_fields = '__all__'
 
 class WOTemplateSchualingRetrive(generics.RetrieveUpdateDestroyAPIView):
@@ -1115,7 +1114,7 @@ class FrequencyView(generics.ListCreateAPIView):
     serializer_class = FrequencySerializer
     queryset = Frequency.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FrequencyCode', 'FrequencyName', ]
+    filter_fields = {'id': ['exact'], 'FrequencyCode': ['icontains'], 'FrequencyName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -1123,7 +1122,7 @@ class FrequencyCreate(generics.ListCreateAPIView):
     serializer_class = FrequencySerializer
     queryset = Frequency.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'FrequencyCode', 'FrequencyName', ]
+    filter_fields = {'id': ['exact'], 'FrequencyCode': ['icontains'], 'FrequencyName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -1135,7 +1134,7 @@ class TemplateSchualingDateView(generics.ListCreateAPIView):
     serializer_class = TemplateSchualingDateSerializer
     queryset = TemplateSchualingDate.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo', ]
+    filter_fields = {'id': ['exact'], 'TemplateSchualingDate': ['icontains'], 'WOTemplateSchualingID': ['exact'], 'StatusOfDo': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -1143,7 +1142,7 @@ class TemplateSchualingDateCreate(generics.ListCreateAPIView):
     serializer_class = TemplateSchualingDateSerializer
     queryset = TemplateSchualingDate.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo', ]
+    filter_fields = {'id': ['exact'], 'TemplateSchualingDate': ['icontains'], 'WOTemplateSchualingID': ['exact'], 'StatusOfDo': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -1177,8 +1176,8 @@ class WRTaskCreate(generics.ListCreateAPIView):
             return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TaskCode', 'TaskName', 'TaskDescription', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo',
-                  'Functor', 'TaskTypeID', 'JobCategoryID', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 class WRTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
@@ -1217,8 +1216,8 @@ class TaskTempCreate(generics.ListCreateAPIView):
             return queryset.filter(AssetClassID = assets[0].AssetChildID)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['id', 'TaskCode', 'TaskName', 'TaskDescription', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo',
-                  'Functor', 'TaskTypeID', 'JobCategoryID', 'AssetClassID', ]
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 class TaskTempRetrive(generics.RetrieveUpdateDestroyAPIView):
