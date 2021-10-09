@@ -186,6 +186,9 @@ class FailureCauseRetrive(generics.RetrieveUpdateDestroyAPIView):
 class LocationFath(filters.FilterSet):
     LocationFatherID = NumberInFilter(field_name='LocationFatherID', lookup_expr='in')
     LocationFatherID__isnull = filters.BooleanFilter(field_name='LocationFatherID', lookup_expr='isnull')
+    LocationCode = filters.CharFilter(field_name='LocationCode', lookup_expr='icontains')
+    LocationName = filters.CharFilter(field_name='LocationName', lookup_expr='icontains')
+    LocationFatherName = filters.CharFilter(field_name='LocationFatherID__LocationName', lookup_expr='icontains')
 
 
 class LocationView(generics.ListCreateAPIView):
@@ -319,24 +322,24 @@ class AssetSpecificDataRetrive(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AssetSubdivisionView(generics.ListCreateAPIView):
-    serializer_class = AssetSubdivisionSerializer
-    queryset = AssetSubdivision.objects.all()
+    serializer_class = AssetSubdivisionAssetSerializer
+    queryset = AssetSubdivision.objects.all().values('id','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName', 'AssetID__AssetName', 'AssetID__AssetCode', 'AssetID__LocationID__LocationName', 'AssetID__LocationID__LocationCode', 'AssetID__LocationID__LocationCodeChain', 'AssetID__LocationID__LocationNameChain')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'], 'fakelocation': ['exact'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'], 'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains']} 
     ordering_fields = '__all__'
 
 
 class AssetSubdivisionCreate(generics.ListCreateAPIView):
-    serializer_class = AssetSubdivisionSerializer
-    queryset = AssetSubdivision.objects.all()
+    serializer_class = AssetSubdivisionAssetSerializer
+    queryset = AssetSubdivision.objects.all().values('id','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName', 'AssetID__AssetName', 'AssetID__AssetCode', 'AssetID__LocationID__LocationName', 'AssetID__LocationID__LocationCode', 'AssetID__LocationID__LocationCodeChain', 'AssetID__LocationID__LocationNameChain')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'], 'fakelocation': ['exact'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'], 'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains']} 
     ordering_fields = '__all__'
 
 
 class AssetSubdivisionRetrive(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = AssetSubdivisionSerializer
-    queryset = AssetSubdivision.objects.all()
+    serializer_class = AssetSubdivisionAssetSerializer
+    queryset = AssetSubdivision.objects.all().values('id','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName', 'AssetID__AssetName', 'AssetID__AssetCode', 'AssetID__LocationID__LocationName', 'AssetID__LocationID__LocationCode', 'AssetID__LocationID__LocationCodeChain', 'AssetID__LocationID__LocationNameChain')
 
 
 class SparePartDimensionView(generics.ListCreateAPIView):

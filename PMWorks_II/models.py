@@ -23,8 +23,8 @@ class AssetCategory(models.Model):
     AssetCategoryName = models.CharField(max_length=100, verbose_name='نام خانواده تجهیز')
     slug = models.SlugField(max_length=100)
     AssetClassFather = models.ForeignKey('self', on_delete=models.RESTRICT, blank=True, null=True, verbose_name='خانواده تجهیز پدر')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -40,8 +40,8 @@ class AssetClass(models.Model):
     AssetClassName = models.CharField(max_length=200, verbose_name='نام کلاس تجیز')
     AssetCategoryID = models.ForeignKey('AssetCategory', on_delete=models.RESTRICT, null=True, blank=False,
                                         verbose_name='خانواده تجیز')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -60,8 +60,8 @@ class AssetClassSubdivision(models.Model):
                                           blank=False,
                                           verbose_name='کلاس تجیز فرزند')
     AssetClassChildNumber = models.IntegerField(verbose_name='تعداد فرزند')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -78,8 +78,8 @@ class FailureMode(models.Model):
     FailureModeDescription = models.TextField(verbose_name='توضیحات', blank=True)
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False,
                                      verbose_name='کلاس تجهیز')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -96,8 +96,8 @@ class FailureCause(models.Model):
     FailureCauseDescription = models.TextField(verbose_name='توضیحات')
     FailureModeID = models.ForeignKey('FailureMode', on_delete=models.RESTRICT, null=True, blank=False,
                                       verbose_name='نوع خرابی')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -112,8 +112,8 @@ class SpecificData(models.Model):
     SpecificDataCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد ویژگی')
     SpecificDataName = models.CharField(max_length=200, verbose_name='نام ویژگی')
     Measurment = models.CharField(max_length=200, verbose_name='اندازه گيري')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -127,8 +127,8 @@ class SpecificData(models.Model):
 class AssetClassSpecificData(models.Model):
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='کلاس تجهیز')
     SpecificDataID = models.ForeignKey('SpecificData', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='ویژگی')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -143,8 +143,8 @@ class AssetPriority(models.Model):
     AssetPriorityCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد اولویت')
     AssetPriorityName = models.CharField(max_length=200, verbose_name='نام اولویت')
     AssetPriorityValue = models.IntegerField(verbose_name='ارزش اولویت')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -159,8 +159,10 @@ class Location(models.Model):
     LocationCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد مکان')
     LocationName = models.CharField(max_length=200, verbose_name='نام مکان')
     LocationFatherID = models.ForeignKey('self', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='مکان پدر')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    LocationCodeChain = models.CharField(max_length=1000, null=True, blank=True, verbose_name='کد مکانزنجيزه')
+    LocationNameChain = models.CharField(max_length=1000, null=True, blank=True, verbose_name='زنجيزه نام مکان')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -170,6 +172,15 @@ class Location(models.Model):
     def __str__(self):
         return "{}-{}".format(self.LocationCode, self.LocationName)
 
+def save_Loc(sender, instance, **kwargs):
+    if instance.LocationFatherID:
+        instance.LocationCodeChain="_".join([instance.LocationFatherID.LocationCodeChain, instance.LocationCode])
+        instance.LocationNameChain="_".join([instance.LocationFatherID.LocationNameChain, instance.LocationName])
+    else:
+        instance.LocationCodeChain=instance.LocationCode
+        instance.LocationNameChain=instance.LocationName
+        
+pre_save.connect(save_Loc, sender=Location)
 
 class Asset(models.Model):
     AssetCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد تجهیز')
@@ -180,8 +191,8 @@ class Asset(models.Model):
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='کلاس تجهیز')
     status = models.IntegerField(verbose_name='وضعيت توليد', blank=True)
     fakesub = models.IntegerField(verbose_name='زيرمجموعه فيک', blank=True)
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -206,8 +217,8 @@ class AssetSubdivision(models.Model):
     AssetCode = models.CharField(max_length=500, verbose_name='کد تجهيز')
     AssetName = models.CharField(max_length=500, verbose_name='نام تجهيز')
     tree = models.IntegerField(blank=True, verbose_name='وضعیت درخت')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -303,8 +314,8 @@ class AssetSubdivisionSparePart(models.Model):
     AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='تجهیز')
     SparePartID = models.ForeignKey('SparePart', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='قطعات یدکی')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -317,8 +328,8 @@ class AssetSpecificData(models.Model):
                                            verbose_name='تجهیز')
     SpecificDataID = models.ForeignKey('SpecificData', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='ویژگی')
     SpecificAmount = models.IntegerField(verbose_name='مقدار ویژگی', blank=True)
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -343,8 +354,8 @@ post_save.connect(save_AssetSpe, sender=AssetSubdivision)
 class SparePartDimension(models.Model):
     SparePartDimensionCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد بعد')
     SparePartDimensionName = models.CharField(max_length=200, verbose_name='نام بعد')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -360,8 +371,8 @@ class SparePartCategory(models.Model):
     SparePartCategoryName = models.CharField(max_length=200, verbose_name='نام خانواده قطعه')
     SparePartCategoryFather = models.ForeignKey('self', on_delete=models.RESTRICT, null=True, blank=True,
                                                 verbose_name='خانواده قطعه  پدر')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -379,8 +390,8 @@ class SparePart(models.Model):
                                             verbose_name='خانواده قطعه')
     SparePartDimensionID = models.ForeignKey('SparePartDimension', on_delete=models.RESTRICT, null=True, blank=False,
                                              verbose_name='بعد قطعه')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -389,22 +400,6 @@ class SparePart(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.SparePartCode, self.SparePartName)
-
-
-# class AssetSparePart(models.Model):
-#   AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.CASCADE, blank=False,
-#                                         verbose_name='زیر تجهیز')
-# SparePartID = models.ForeignKey('SparePart', on_delete=models.CASCADE, blank=False, verbose_name='قطعه')
-# Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-# Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
-
-# class Meta:
-#   ordering = ['-Create']
-#  verbose_name = 'قطعه تجهیز'
-# verbose_name_plural = 'قطعات تجهیز'
-
-# def __str__(self):
-#   return "{}-{}".format(self.AssetSubdivisionID, self.SparePartID)
 
 
 def upload_path(instance, filename):
@@ -416,8 +411,8 @@ class Document(models.Model):
     DocumentName = models.CharField(max_length=200, verbose_name='نام فایل')
     DocumentDescription = models.TextField(verbose_name='توضیحات')
     FileAddress = models.FileField(upload_to=upload_path, verbose_name='فایل')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -431,8 +426,8 @@ class Document(models.Model):
 class AssetClassDocument(models.Model):
     DocumentID = models.ForeignKey('Document', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='فایل')
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='تجهیز')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -447,8 +442,8 @@ class TaskType(models.Model):
     TaskTypeCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد نوع وظیفه')
     TaskTypeName = models.CharField(max_length=200, verbose_name='نام نوع وظیفه')
     TaskTypeDescription = models.TextField(verbose_name='توضیحات', blank=True)
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -462,8 +457,8 @@ class TaskType(models.Model):
 class JobCategory(models.Model):
     JobCategoryCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد نوع شغل')
     JobCategoryName = models.CharField(max_length=200, verbose_name='نام نوع شغل')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -497,8 +492,8 @@ class AssetClassTask(models.Model):
     JobCategoryID = models.ForeignKey('JobCategory', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع شغل')
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='کلاس تجهیز')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -512,8 +507,8 @@ class AssetClassTask(models.Model):
 class Department(models.Model):
     DepartmentCode = models.CharField(max_length=100, verbose_name='کد دپارتمان')
     DepartmentName = models.CharField(max_length=200, verbose_name='نام دپارتمان')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -532,8 +527,8 @@ class Personnel(models.Model):
     PersonnelFamily = models.CharField(max_length=200, verbose_name='فامیل پرسنل')
     PersonnelMobile = models.CharField(max_length=100, verbose_name='شماره پرسنل')
     DepartmentID = models.ForeignKey('Department', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دپارتمان')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -547,8 +542,8 @@ class Personnel(models.Model):
 class PersonnelJobCategory(models.Model):
    JobCategoryID = models.ForeignKey('JobCategory', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع شغل')
    PersonnelID = models.ForeignKey('Personnel', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='پرسنل')
-   Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-   Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+   Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+   Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
    class Meta:
       ordering = ['-Create']
@@ -562,8 +557,8 @@ class PersonnelJobCategory(models.Model):
 class TypeWr(models.Model):
     TypeWrCode = models.CharField(max_length=100, verbose_name='کد نوع درخواست کار')
     TypeWrName = models.CharField(max_length=200, verbose_name='نام نوع درخواست کار')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -578,8 +573,8 @@ class WorkPriority(models.Model):
     WorkPriorityCode = models.CharField(max_length=100, verbose_name='کد اولویت')
     WorkPriorityName = models.CharField(max_length=200, verbose_name='نام اولویت')
     WorkPriorityValue = models.IntegerField(verbose_name='مقدار اولویت')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -593,8 +588,8 @@ class WorkPriority(models.Model):
 class Supplier(models.Model):
     SupplierCode = models.CharField(max_length=100, verbose_name='کد تامین کننده')
     SupplierName = models.CharField(max_length=200, verbose_name='نام تامین کننده')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -608,8 +603,8 @@ class Supplier(models.Model):
 class SupplierSpecific(models.Model):
     SupplierSpecificCode = models.CharField(max_length=100, verbose_name='کد ویژگی تامین کننده')
     SupplierSpecificName = models.CharField(max_length=200, verbose_name='نام ویژگی تامین کننده')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -625,8 +620,8 @@ class SupplierSpecificData(models.Model):
     SupplierSpecificID = models.ForeignKey('SupplierSpecific', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='ویژگی')
     SpecificAmount = models.CharField(max_length=50, verbose_name='مقدار ویژگی')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -645,8 +640,8 @@ class WorkRequest(models.Model):
     FailureModeID = models.ForeignKey('FailureMode', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع خرابی')
     WorkPriorityID = models.ForeignKey('WorkPriority', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='اولویت')
     TypeWrID = models.ForeignKey('TypeWr', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -663,8 +658,8 @@ class WorkOrder(models.Model):
     DateOfPlanStart = models.DateField(verbose_name='تاریخ شروع')
     DateOfPlanFinish = models.DateField(verbose_name='تاریخ پایان')
     WorkRequestID = models.ForeignKey('WorkRequest', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='درخواست کار')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -680,8 +675,8 @@ class WOSupplier(models.Model):
     WorkFinishDate = models.DateField(verbose_name='تاریخ پایان')
     WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     SupplierID = models.ForeignKey('Supplier', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='تامین کنده')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -697,8 +692,8 @@ class WOPersonnel(models.Model):
     WorkTime = models.IntegerField(verbose_name='مدت زمان انجام')
     WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     PersonnelID = models.ForeignKey('Personnel', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='پرسنل')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -712,8 +707,8 @@ class WOPersonnel(models.Model):
 class Delay(models.Model):
     DelayCode = models.CharField(max_length=100, verbose_name='کد تاخیر')
     DelayName = models.CharField(max_length=200, verbose_name='نام تاخیر')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -730,8 +725,8 @@ class WODelay(models.Model):
     WODelayDescription = models.TextField(verbose_name='توضیحات')
     WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     DelayID = models.ForeignKey('Delay', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='تاخیر')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -746,8 +741,8 @@ class WOSparePart(models.Model):
     WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     SparePartID = models.ForeignKey('SparePart', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='قطعه')
     SparePartAmount = models.IntegerField(verbose_name='تعداد قطعه')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -762,8 +757,8 @@ class WOTask(models.Model):
     WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     TaskID = models.ForeignKey('AssetClassTask', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='وظیفه')
     WOTaskSituationOfDo = models.CharField(max_length=50, verbose_name='وضعیت انجام')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -777,8 +772,8 @@ class WOTask(models.Model):
 class Frequency(models.Model):
     FrequencyCode = models.CharField(max_length=100, verbose_name='کد تناوب')
     FrequencyName = models.CharField(max_length=200, verbose_name='نام تناوب')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -793,8 +788,8 @@ class WOTemplateType(models.Model):
     WOTemplateTypeCode = models.CharField(max_length=100, verbose_name='کد نوع برنامه')
     WOTemplateTypeName = models.CharField(max_length=200, verbose_name='نام نوع برنامه')
     WOTemplateTypeDescription = models.TextField(verbose_name='توضیحات', blank=True)
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -814,8 +809,8 @@ class WOTemplate(models.Model):
     WOTemplateAlarmHour = models.TimeField(verbose_name='ساعت اعلام تناوب')
     DepartmentID = models.ForeignKey('Department', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دپارتمان')
     WOTemplateTypeID = models.ForeignKey('WOTemplateType', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -832,8 +827,8 @@ class WOActivityTemplateTbl(models.Model):
                                            verbose_name='فعالیت')
     AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='تجهیز')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -851,8 +846,8 @@ class WOTemplateSchualing(models.Model):
     Status = models.BooleanField(default=False, verbose_name='وضعیت')
     WOTemplateID = models.ForeignKey('WOTemplate', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     FrequencyID = models.ForeignKey('Frequency', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='تناوب')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -888,8 +883,8 @@ class TemplateSchualingDate(models.Model):
     TemplateSchualingDate = models.DateField(verbose_name='روز برنامه')
     WOTemplateSchualingID = models.ForeignKey('WOTemplateSchualing', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='برنامه')
     StatusOfDo = models.BooleanField(default=False, verbose_name='وضعیت انجام')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']
@@ -906,8 +901,8 @@ class WorkRequestFailureCause(models.Model):
     FailureCauseID = models.ForeignKey('FailureCause', on_delete=models.RESTRICT, null=True, related_name='FailureCause',
                                           blank=False,
                                           verbose_name='علت خرابي')
-    Create = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    Update = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
     class Meta:
         ordering = ['-Create']

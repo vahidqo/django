@@ -94,7 +94,7 @@ class AssetPrioritySerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'LocationCode', 'LocationName', 'LocationFatherID']
+        fields = ['id', 'LocationCode', 'LocationName', 'LocationFatherID', 'LocationCodeChain', 'LocationNameChain']
         extra_kwargs = {
             'LocationFatherID': {'required': False,
                                  'allow_null': True
@@ -323,6 +323,16 @@ class AssetSubdivisionAssetSerializer(serializers.Serializer):
     AssetChildID = serializers.IntegerField()
     tree = serializers.IntegerField()
     fakelocation = serializers.IntegerField()
+    AssetClassCodeChain = serializers.CharField()
+    AssetClassNameChain = serializers.CharField()
+    idChain = serializers.CharField()
+    AssetCode = serializers.CharField()
+    AssetName = serializers.CharField()
+    AssetID__LocationID__LocationName = serializers.CharField()
+    AssetID__LocationID__LocationCode = serializers.CharField()
+    AssetID__LocationID__LocationCodeChain = serializers.CharField()
+    AssetID__LocationID__LocationNameChain = serializers.CharField()
+
 
 class WorkRequestFailureCauseSerializer(serializers.ModelSerializer):
     class Meta:
