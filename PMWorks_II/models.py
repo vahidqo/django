@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from rest_framework.authtoken.models import Token
 from django.core.validators import RegexValidator
+from datetime import datetime
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
@@ -242,7 +243,7 @@ def save_Asset(sender, instance, created, **kwargs):
                     ichain=str(ma[0].id)
                     AssetSubdivision.objects.create(AssetChildID=i.AssetClassChildID, AssetSubdivisionFatherID=ma[0], tree=0,
                                                     fakelocation=instance.LocationID.id, AssetClassCodeChain=cchain,
-                                                    AssetClassNameChain=nchain, idChain=ichain)
+                                                    AssetClassNameChain=nchain, idChain=ichain, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
                     cnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=i.AssetClassChildID)
                     maa = AssetSubdivision.objects.filter(AssetChildID=i.AssetClassChildID, AssetSubdivisionFatherID=ma[0])
                     for z in cnn:
@@ -253,7 +254,7 @@ def save_Asset(sender, instance, created, **kwargs):
                             ichainn="_".join([ichain, str(maa[0].id)])
                             AssetSubdivision.objects.create(AssetChildID=z.AssetClassChildID,
                                                             AssetSubdivisionFatherID=maa[0], tree=0, fakelocation=instance.LocationID.id, AssetClassCodeChain=cchainn,
-                                                            AssetClassNameChain=nchainn, idChain=ichainn)
+                                                            AssetClassNameChain=nchainn, idChain=ichainn, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
                             cnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=z.AssetClassChildID)
                             maaa = AssetSubdivision.objects.filter(AssetChildID=z.AssetClassChildID,
                                                                    AssetSubdivisionFatherID=maa[0])
@@ -265,7 +266,7 @@ def save_Asset(sender, instance, created, **kwargs):
                                     ichainnn="_".join([ichainn, str(maaa[0].id)])
                                     AssetSubdivision.objects.create(AssetChildID=y.AssetClassChildID,
                                                                     AssetSubdivisionFatherID=maaa[0], tree=0, fakelocation=instance.LocationID.id, AssetClassCodeChain=cchainnn,
-                                                                    AssetClassNameChain=nchainnn, idChain=ichainnn)
+                                                                    AssetClassNameChain=nchainnn, idChain=ichainnn, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
                                     cnnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=y.AssetClassChildID)
                                     maaaa = AssetSubdivision.objects.filter(AssetChildID=y.AssetClassChildID, AssetSubdivisionFatherID=maaa[0])
                                     for n in cnnnn:
@@ -276,7 +277,7 @@ def save_Asset(sender, instance, created, **kwargs):
                                             ichainnnn="_".join([ichainnn, str(maaaa[0].id)])
                                             AssetSubdivision.objects.create(AssetChildID=n.AssetClassChildID,
                                                                             AssetSubdivisionFatherID=maaaa[0], tree=0, fakelocation=instance.LocationID.id, AssetClassCodeChain=cchainnnn,
-                                                                            AssetClassNameChain=nchainnnn, idChain=ichainnnn)
+                                                                            AssetClassNameChain=nchainnnn, idChain=ichainnnn, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
                                             cnnnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=n.AssetClassChildID)
                                             maaaaa = AssetSubdivision.objects.filter(AssetChildID=n.AssetClassChildID, AssetSubdivisionFatherID=maaaa[0])
                                             for v in cnnnnn:
@@ -287,7 +288,7 @@ def save_Asset(sender, instance, created, **kwargs):
                                                     ichainnnnn="_".join([ichainnnn, str(maaaaa[0].id)])
                                                     AssetSubdivision.objects.create(AssetChildID=v.AssetClassChildID,
                                                                                     AssetSubdivisionFatherID=maaaaa[0], tree=0, fakelocation=instance.LocationID.id, AssetClassCodeChain=chainnnnn,
-                                                                                    AssetClassNameChain=nchainnnnn, idChain=ichainnnnn)
+                                                                                    AssetClassNameChain=nchainnnnn, idChain=ichainnnnn, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
                                                     cnnnnnn = AssetClassSubdivision.objects.filter(AssetClassFatherID=v.AssetClassChildID)
                                                     maaaaaa = AssetSubdivision.objects.filter(AssetChildID=v.AssetClassChildID, AssetSubdivisionFatherID=maaaaa[0])
                                                     for b in cnnnnnn:
@@ -298,7 +299,7 @@ def save_Asset(sender, instance, created, **kwargs):
                                                             ichainnnnnn="_".join([ichainnnnn, str(maaaaaa[0].id)])
                                                             AssetSubdivision.objects.create(AssetChildID=b.AssetClassChildID,
                                                                                             AssetSubdivisionFatherID=maaaaaa[0], tree=0, fakelocation=instance.LocationID.id, AssetClassCodeChain=chainnnnnn,
-                                                                                            AssetClassNameChain=nchainnnnnn, idChain=ichainnnnnn)
+                                                                                            AssetClassNameChain=nchainnnnnn, idChain=ichainnnnnn, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
         elif instance.status == 1:
             AssetSubdivision.objects.filter(id=instance.fakesub).update(AssetID=instance, AssetCode=instance.AssetCode, AssetName=instance.AssetName)
         
@@ -634,12 +635,15 @@ class SupplierSpecificData(models.Model):
 
 class WorkRequest(models.Model):
     WRDate = models.DateField(verbose_name='تاریخ')
+    WRTime = models.TimeField(verbose_name='ساعت')
     WRDateOfRegistration = models.DateField(verbose_name='تاریخ ثبت')
+    WRTimeOfRegistration = models.TimeField(verbose_name='زمان ثبت')
     AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='تجهیز')
     FailureModeID = models.ForeignKey('FailureMode', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع خرابی')
     WorkPriorityID = models.ForeignKey('WorkPriority', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='اولویت')
     TypeWrID = models.ForeignKey('TypeWr', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع')
+    StatusID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='وضعيت')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -654,10 +658,11 @@ class WorkRequest(models.Model):
 
 class WorkOrder(models.Model):
     WODateOfRegistration = models.DateField(auto_now_add=True, verbose_name='تاریخ ثبت')
-    WODescription = models.TextField(verbose_name='توضیحات')
+    WODescription = models.TextField(null=True, blank=True, verbose_name='توضیحات')
     DateOfPlanStart = models.DateField(verbose_name='تاریخ شروع')
     DateOfPlanFinish = models.DateField(verbose_name='تاریخ پایان')
     WorkRequestID = models.ForeignKey('WorkRequest', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='درخواست کار')
+    StatusID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='وضعيت')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -690,7 +695,7 @@ class WOSupplier(models.Model):
 class WOPersonnel(models.Model):
     WorkDate = models.DateField(verbose_name='تاریخ انجام')
     WorkTime = models.IntegerField(verbose_name='مدت زمان انجام')
-    WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
+    WOTaskID = models.ForeignKey('WOTask', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار وظيفه')
     PersonnelID = models.ForeignKey('Personnel', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='پرسنل')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -738,7 +743,7 @@ class WODelay(models.Model):
 
 
 class WOSparePart(models.Model):
-    WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
+    WOTaskID = models.ForeignKey('WOTask', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='وظيفه دستورکار')
     SparePartID = models.ForeignKey('SparePart', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='قطعه')
     SparePartAmount = models.IntegerField(verbose_name='تعداد قطعه')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -912,6 +917,133 @@ class WorkRequestFailureCause(models.Model):
     def __str__(self):
         return "{}-{}".format(self.WorkRequestID, self.FailureCauseID)
 
+class Status(models.Model):
+    StatusCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد وضعيت')
+    StatusName = models.CharField(max_length=200, verbose_name='نام وضعيت')
+    StatusCondition = models.CharField(max_length=200, verbose_name='شرايط')
+    OpCl = models.CharField(max_length=100, null=True, blank=True, verbose_name='وضعيت')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'وضعيت'
+        verbose_name_plural = 'انوع وضعيت'
+
+    def __str__(self):
+        return "{}-{}".format(self.StatusCode, self.StatusName)
 
 
+def save_WRS(sender, instance, created, **kwargs):
+    if created:
+        st = WorkflowLevelStatus.objects.filter(WorkflowLevelID = 1, WorkflowLevelStatusPeriority = 0)
+        WRStatus.objects.create(WorkRequestID=instance, StatusID=st[0].StatusID, StatusDate=datetime.date(datetime.now()), StatusTime=datetime.time(datetime.now()))
 
+
+post_save.connect(save_WRS, sender=WorkRequest)
+
+def save_WOS(sender, instance, created, **kwargs):
+    if created:
+        st = WorkflowLevelStatus.objects.filter(WorkflowLevelID = 4, WorkflowLevelStatusPeriority = 0)
+        WOStatus.objects.create(WorkOrderID=instance, StatusID=st[0].StatusID, StatusDate=datetime.date(datetime.now()), StatusTime=datetime.time(datetime.now()))
+
+
+post_save.connect(save_WOS, sender=WorkOrder)
+
+class WRWORelationStatus(models.Model):
+    StatusWOID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, related_name='WorkOrder',
+                                           blank=False,
+                                           verbose_name='دستور کار')
+    StstusWRID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, related_name='WorkRequest',
+                                          blank=False,
+                                          verbose_name='درخواست کار')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'ارتباط وضعيت'
+        verbose_name_plural = 'ارتباط وضعيت ها'
+
+    def __str__(self):
+        return "{}-{}".format(self.StatusWOID, self.StstusWRID)
+
+class WRStatus(models.Model):
+    StatusID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='وضعيت')
+    WorkRequestID = models.ForeignKey('WorkRequest', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='درخواست کار')
+    StatusDate = models.DateField(verbose_name='تاریخ ثبت')
+    StatusTime = models.TimeField(verbose_name='زمان ثبت')
+    StatusDescription = models.TextField(verbose_name='توضیحات', blank=True, null=True)
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'وضعيت درخواست کار'
+        verbose_name_plural = 'وضعيت هاي درخواستت کار'
+
+    def __str__(self):
+        return "{}-{}".format(self.StatusID, self.WorkRequestID)
+
+
+class WOStatus(models.Model):
+    StatusID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='وضعيت')
+    WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
+    StatusDate = models.DateField(verbose_name='تاریخ ثبت')
+    StatusTime = models.TimeField(verbose_name='زمان ثبت')
+    StatusDescription = models.TextField(verbose_name='توضیحات', blank=True, null=True)
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'وضعيت دستور کار'
+        verbose_name_plural = 'وضعيت هاي دستور کار'
+
+    def __str__(self):
+        return "{}-{}".format(self.StatusID, self.WorkOrderID)
+
+def save_WRupdate(sender, instance, created, **kwargs):
+    if created:
+        WorkRequest.objects.filter(id=instance.WorkRequestID.id).update(StatusID=instance.StatusID)
+
+post_save.connect(save_WRupdate, sender=WRStatus)
+
+def save_WOupdate(sender, instance, created, **kwargs):
+    if created:
+        WorkOrder.objects.filter(id=instance.WorkOrderID.id).update(StatusID=instance.StatusID)
+        req = WorkOrder.objects.filter(id=instance.WorkOrderID.id)
+        rst = WRWORelationStatus.objects.filter(StatusWOID=instance.StatusID.id)
+        WRStatus.objects.create(WorkRequestID=req[0].WorkRequestID, StatusID=rst[0].StstusWRID, StatusDate=datetime.date(datetime.now()), StatusTime=datetime.time(datetime.now()))
+
+post_save.connect(save_WOupdate, sender=WOStatus)
+
+
+class WorkflowLevel(models.Model):
+    WorkflowLevelName = models.CharField(max_length=200, verbose_name='نام سطح')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'سطح وضعيت'
+        verbose_name_plural = 'سطوح وضعيت'
+
+    def __str__(self):
+        return "{}".format(self.WorkflowLevelName)
+
+
+class WorkflowLevelStatus(models.Model):
+    StatusID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='وضعيت')
+    WorkflowLevelID = models.ForeignKey('WorkflowLevel', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='سطح')
+    WorkflowLevelStatusPeriority = models.IntegerField(verbose_name='اولويت', blank=True)
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'کار سطح وضعيت'
+        verbose_name_plural = 'کار سطوح وضعيت'
+
+    def __str__(self):
+        return "{}-{}".format(self.StatusID, self.WorkflowLevelID)

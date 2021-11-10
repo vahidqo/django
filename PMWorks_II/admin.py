@@ -364,20 +364,6 @@ class WOSupplierAdmin(admin.ModelAdmin):
     ordering = ['Create']
 
 
-@admin.register(WOPersonnel)
-class WOPersonnelAdmin(admin.ModelAdmin):
-    list_display = ('WorkDate', 'WorkTime', 'WorkOrderID_Name', 'PersonnelID_Name', 'Create')
-
-    def WorkOrderID_Name(self, obj):
-        return obj.WorkOrderID.id
-
-    def PersonnelID_Name(self, obj):
-        return obj.PersonnelID.PersonnelName
-
-    list_filter = ('WorkDate', 'WorkOrderID', 'PersonnelID', 'Create')
-    ordering = ['Create']
-
-
 @admin.register(Delay)
 class DelayAdmin(admin.ModelAdmin):
     list_display = ('DelayCode', 'DelayName', 'Create')
@@ -402,15 +388,12 @@ class WODelayAdmin(admin.ModelAdmin):
 
 @admin.register(WOSparePart)
 class WOSparePartAdmin(admin.ModelAdmin):
-    list_display = ('WorkOrderID_Name', 'SparePartID_Name', 'SparePartAmount', 'Create')
-
-    def WorkOrderID_Name(self, obj):
-        return obj.WorkOrderID.id
+    list_display = ('WOTaskID', 'SparePartID', 'SparePartAmount', 'Create')
 
     def SparePartID_Name(self, obj):
         return obj.SparePartID.SparePartName
 
-    list_filter = ('WorkOrderID', 'SparePartID', 'Create')
+    list_filter = ('WOTaskID', 'SparePartID', 'Create')
     ordering = ['Create']
 
 

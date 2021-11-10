@@ -4,7 +4,8 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
-    PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOActivityTemplateTbl, TemplateSchualingDate
+    PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOActivityTemplateTbl, TemplateSchualingDate, WOStatus, WRStatus, \
+    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus
 from django.contrib.auth.models import User
 
 
@@ -200,8 +201,8 @@ class SupplierSpecificDataSerializer(serializers.ModelSerializer):
 class WorkRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkRequest
-        fields = ['id', 'WRDate', 'WRDateOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
-                  'WorkPriorityID', 'TypeWrID']
+        fields = ['id', 'WRDate', 'WRTime', 'WRDateOfRegistration', 'WRTimeOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
+                  'WorkPriorityID', 'TypeWrID', 'StatusID']
 
 
 class TypeWrSerializer(serializers.ModelSerializer):
@@ -219,7 +220,7 @@ class WorkPrioritySerializer(serializers.ModelSerializer):
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
-        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID']
+        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID']
 
 
 class WOSupplierSerializer(serializers.ModelSerializer):
@@ -231,7 +232,7 @@ class WOSupplierSerializer(serializers.ModelSerializer):
 class WOPersonnelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOPersonnel
-        fields = ['id', 'WorkDate', 'WorkTime', 'WorkOrderID', 'PersonnelID']
+        fields = ['id', 'WorkDate', 'WorkTime', 'WOTaskID', 'PersonnelID']
 
 
 class DelaySerializer(serializers.ModelSerializer):
@@ -249,7 +250,7 @@ class WODelaySerializer(serializers.ModelSerializer):
 class WOSparePartSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOSparePart
-        fields = ['id', 'WorkOrderID', 'SparePartID', 'SparePartAmount']
+        fields = ['id', 'WOTaskID', 'SparePartID', 'SparePartAmount']
 
 
 class WOTaskSerializer(serializers.ModelSerializer):
@@ -312,6 +313,36 @@ class TemplateSchualingDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TemplateSchualingDate
         fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo']
+
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = ['id', 'StatusCode', 'StatusName', 'StatusCondition','OpCl']
+
+class WRWORelationStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WRWORelationStatus
+        fields = ['id', 'StatusWOID', 'StstusWRID']
+
+class WRStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WRStatus
+        fields = ['id', 'StatusID', 'WorkRequestID', 'StatusDate', 'StatusTime', 'StatusDescription']
+
+class WOStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WOStatus
+        fields = ['id', 'StatusID', 'WorkOrderID', 'StatusDate', 'StatusTime', 'StatusDescription']
+
+class WorkflowLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkflowLevel
+        fields = ['id', 'WorkflowLevelName']
+
+class WorkflowLevelStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkflowLevelStatus
+        fields = ['id', 'StatusID', 'WorkflowLevelID', 'WorkflowLevelStatusPeriority']
 
 
 class AssetSubdivisionAssetSerializer(serializers.Serializer):
