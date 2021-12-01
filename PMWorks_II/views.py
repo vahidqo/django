@@ -20,7 +20,7 @@ from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetCla
     WOTaskSerializer, UserSerializer, AssetSubdivisionAssetSerializer, FailureCauseSerializer, WorkRequestFailureCauseSerializer, \
     WOTemplateTypeSerializer, WOTemplateSerializer, WOActivityTemplateSerializer, WOTemplateSchualingSerializer, FrequencySerializer, \
     TemplateSchualingDateSerializer, StatusSerializer, WRWORelationStatusSerializer, WRStatusSerializer, WOStatusSerializer, \
-    WorkflowLevelSerializer, WorkflowLevelStatusSerializer
+    WorkflowLevelSerializer, WorkflowLevelStatusSerializer, WorkOrderNewSerializer
 
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
@@ -693,8 +693,8 @@ class WorkRequestRetrive(generics.RetrieveUpdateDestroyAPIView):
 
 
 class WorkOrderView(generics.ListCreateAPIView):
-    serializer_class = WorkOrderSerializer
-    queryset = WorkOrder.objects.all()
+    serializer_class = WorkOrderNewSerializer
+    queryset = WorkOrder.objects.all().values('id','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'], 'WorkRequestID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact']}
     ordering_fields = '__all__'
@@ -709,8 +709,8 @@ class WorkOrderCreate(generics.ListCreateAPIView):
 
 
 class WorkOrderRetrive(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = WorkOrderSerializer
-    queryset = WorkOrder.objects.all()
+    serializer_class = WorkOrderNewSerializer
+    queryset = WorkOrder.objects.all().values('id','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID')
 
 
 class WOSupplierView(generics.ListCreateAPIView):

@@ -371,3 +371,13 @@ class WorkRequestFailureCauseSerializer(serializers.ModelSerializer):
         fields = ['id', 'WorkRequestID', 'FailureCauseID']
 
 
+class WorkOrderNewSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    WODateOfRegistration = serializers.DateField()
+    DateOfPlanStart = serializers.DateField()
+    DateOfPlanFinish = serializers.DateField()
+    WODescription = serializers.CharField()
+    WorkRequestID = serializers.IntegerField()
+    StatusID = serializers.IntegerField()
+    WorkRequestID__AssetSubdivisionID =serializers.IntegerField()
+    WorkRequestID__FailureModeID = serializers.IntegerField()
