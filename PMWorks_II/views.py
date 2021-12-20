@@ -20,7 +20,7 @@ from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetCla
     WOTaskSerializer, UserSerializer, AssetSubdivisionAssetSerializer, FailureCauseSerializer, WorkRequestFailureCauseSerializer, \
     WOTemplateTypeSerializer, WOTemplateSerializer, WOActivityTemplateSerializer, WOTemplateSchualingSerializer, FrequencySerializer, \
     TemplateSchualingDateSerializer, StatusSerializer, WRWORelationStatusSerializer, WRStatusSerializer, WOStatusSerializer, \
-    WorkflowLevelSerializer, WorkflowLevelStatusSerializer, WorkOrderNewSerializer
+    WorkflowLevelSerializer, WorkflowLevelStatusSerializer, WorkOrderNewSerializer, WOTaskorderSerializer
 
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
@@ -835,8 +835,8 @@ class WOTaskCreate(generics.ListCreateAPIView):
 
 
 class WOTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = WOTaskSerializer
-    queryset = WOTask.objects.all()
+    serializer_class = WOTaskorderSerializer
+    queryset = WOTask.objects.all().values('id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', 'TaskID__TaskName', 'TaskID__TaskCode')
 
 class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer

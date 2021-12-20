@@ -7,6 +7,18 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOActivityTemplateTbl, TemplateSchualingDate, WOStatus, WRStatus, \
     WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus
 from django.contrib.auth.models import User
+from drf_extra_fields.fields import Base64FileField
+
+class PDFBase64File(Base64FileField):
+    ALLOWED_TYPES = ['pdf']
+
+    def get_file_extension(self, filename, decoded_file):
+        try:
+            PyPDF2.PdfFileReader(io.BytesIO(decoded_file))
+        except PyPDF2.utils.PdfReadError as e:
+            logger.warning(e)
+        else:
+            return 'pdf'
 
 
 class AssetCategorySerializer(serializers.ModelSerializer):
@@ -144,6 +156,9 @@ class SparePartCategorySerializer(serializers.ModelSerializer):
 
 
 class DocumentSerializer(serializers.ModelSerializer):
+  
+    FileAddress= PDFBase64File(required=False)
+
     class Meta:
         model = Document
         fields = ['id', 'DocumentCode', 'DocumentName', 'DocumentDescription', 'FileAddress']
@@ -381,3 +396,19 @@ class WorkOrderNewSerializer(serializers.Serializer):
     StatusID = serializers.IntegerField()
     WorkRequestID__AssetSubdivisionID =serializers.IntegerField()
     WorkRequestID__FailureModeID = serializers.IntegerField()
+
+
+class WOTaskorderSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    WorkOrderID = serializers.CharField()
+    TaskID = serializers.CharField()
+    WOTaskSituationOfDo = serializers.CharField()
+    TaskID__TaskName = serializers.CharField()
+    TaskID__TaskCode = serializers.CharField()
+    
+    class Meta:
+        model = WOTask
+        fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', 'TaskID__TaskName', 'TaskID__TaskCode']
+    
+    
+
