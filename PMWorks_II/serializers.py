@@ -5,7 +5,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
     PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOActivityTemplateTbl, TemplateSchualingDate, WOStatus, WRStatus, \
-    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus
+    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus, WorkflowLevelStatusShow
 from django.contrib.auth.models import User
 from drf_extra_fields.fields import Base64FileField
 
@@ -235,7 +235,7 @@ class WorkPrioritySerializer(serializers.ModelSerializer):
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
-        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID']
+        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID', 'DepartmentID', 'DateOfStart', 'DateOfFinish']
 
 
 class WOSupplierSerializer(serializers.ModelSerializer):
@@ -394,6 +394,9 @@ class WorkOrderNewSerializer(serializers.Serializer):
     WODescription = serializers.CharField()
     WorkRequestID = serializers.IntegerField()
     StatusID = serializers.IntegerField()
+    DepartmentID = serializers.IntegerField()
+    DateOfStart = serializers.DateField()
+    DateOfFinish = serializers.DateField()
     WorkRequestID__AssetSubdivisionID =serializers.IntegerField()
     WorkRequestID__FailureModeID = serializers.IntegerField()
 
@@ -411,4 +414,7 @@ class WOTaskorderSerializer(serializers.ModelSerializer):
         fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', 'TaskID__TaskName', 'TaskID__TaskCode']
     
     
-
+class WorkflowLevelStatusShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkflowLevelStatusShow
+        fields = ['id', 'StatusID', 'WorkflowLevelStatusID']
