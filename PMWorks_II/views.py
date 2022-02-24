@@ -651,8 +651,8 @@ class AssetClassTaskView(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer
     queryset = AssetClassTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
-                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -660,8 +660,8 @@ class AssetClassTaskCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer
     queryset = AssetClassTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
-                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
     ordering_fields = '__all__'
 
 
