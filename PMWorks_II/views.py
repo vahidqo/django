@@ -875,6 +875,7 @@ class FailureAssetModeView(generics.ListCreateAPIView):
             return queryset.filter(AssetClassID = assetclass[0].AssetChildID)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains'], 'FailureModeDescription': ['icontains'], 'AssetClassID': ['exact']}
     ordering_fields = '__all__'
 
 

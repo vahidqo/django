@@ -638,6 +638,7 @@ class WorkRequest(models.Model):
     WRTime = models.TimeField(verbose_name='ساعت')
     WRDateOfRegistration = models.DateField(verbose_name='تاریخ ثبت')
     WRTimeOfRegistration = models.TimeField(verbose_name='زمان ثبت')
+    WRDescription = models.TextField(null=True, blank=True, verbose_name='توضیحات')
     AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='تجهیز')
     FailureModeID = models.ForeignKey('FailureMode', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع خرابی')

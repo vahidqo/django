@@ -216,7 +216,7 @@ class SupplierSpecificDataSerializer(serializers.ModelSerializer):
 class WorkRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkRequest
-        fields = ['id', 'WRDate', 'WRTime', 'WRDateOfRegistration', 'WRTimeOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
+        fields = ['id', 'WRDate', 'WRTime', 'WRDateOfRegistration', 'WRDescription', 'WRTimeOfRegistration', 'AssetSubdivisionID', 'FailureModeID',
                   'WorkPriorityID', 'TypeWrID', 'StatusID']
 
 
