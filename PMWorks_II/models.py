@@ -76,7 +76,7 @@ class AssetClassSubdivision(models.Model):
 class FailureMode(models.Model):
     FailureModeCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد نوع خرابی')
     FailureModeName = models.CharField(max_length=200, verbose_name='نام نوع حرابی')
-    FailureModeDescription = models.TextField(verbose_name='توضیحات', blank=True)
+    FailureModeDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False,
                                      verbose_name='کلاس تجهیز')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -94,7 +94,7 @@ class FailureMode(models.Model):
 class FailureCause(models.Model):
     FailureCauseCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد علت خرابی')
     FailureCauseName = models.CharField(max_length=200, verbose_name='نام علت حرابی')
-    FailureCauseDescription = models.TextField(verbose_name='توضیحات')
+    FailureCauseDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     FailureModeID = models.ForeignKey('FailureMode', on_delete=models.RESTRICT, null=True, blank=False,
                                       verbose_name='نوع خرابی')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -186,7 +186,7 @@ pre_save.connect(save_Loc, sender=Location)
 class Asset(models.Model):
     AssetCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد تجهیز')
     AssetName = models.CharField(max_length=200, verbose_name='نام تجهیز')
-    InstallationDate = models.DateField(verbose_name='تاریخ نصب')
+    InstallationDate = models.DateField(verbose_name='تاریخ نصب', null=True, blank=True)
     AssetPriorityID = models.ForeignKey('AssetPriority', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='اولویت')
     LocationID = models.ForeignKey('Location', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='مکان')
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='کلاس تجهیز')
@@ -328,7 +328,7 @@ class AssetSpecificData(models.Model):
     AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='تجهیز')
     SpecificDataID = models.ForeignKey('SpecificData', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='ویژگی')
-    SpecificAmount = models.IntegerField(verbose_name='مقدار ویژگی', blank=True)
+    SpecificAmount = models.IntegerField(verbose_name='مقدار ویژگی', null=True, blank=True)
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -410,7 +410,7 @@ def upload_path(instance, filename):
 class Document(models.Model):
     DocumentCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد فایل')
     DocumentName = models.CharField(max_length=200, verbose_name='نام فایل')
-    DocumentDescription = models.TextField(verbose_name='توضیحات')
+    DocumentDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     FileAddress = models.FileField(upload_to=upload_path, verbose_name='فایل')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -442,7 +442,7 @@ class AssetClassDocument(models.Model):
 class TaskType(models.Model):
     TaskTypeCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد نوع وظیفه')
     TaskTypeName = models.CharField(max_length=200, verbose_name='نام نوع وظیفه')
-    TaskTypeDescription = models.TextField(verbose_name='توضیحات', blank=True)
+    TaskTypeDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -484,13 +484,13 @@ class AssetClassTask(models.Model):
     )
     TaskCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد وظیفه')
     TaskName = models.CharField(max_length=200, verbose_name='نام وظیفه')
-    TaskDescription = models.TextField(verbose_name='توضیحات')
-    FrequencyName = models.CharField(max_length=1, choices=Frequency, verbose_name='نام تناوب')
-    FrequencyAmount = models.IntegerField(verbose_name='مقدار تناوب')
-    DurationOfDo = models.IntegerField(verbose_name='مدت زمان انجام')
-    Functor = models.CharField(max_length=1, choices=fun, verbose_name='مسئول')
+    TaskDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
+    FrequencyName = models.CharField(max_length=1, choices=Frequency, verbose_name='نام تناوب', null=True, blank=True)
+    FrequencyAmount = models.IntegerField(verbose_name='مقدار تناوب', null=True, blank=True)
+    DurationOfDo = models.IntegerField(verbose_name='مدت زمان انجام', null=True, blank=True)
+    Functor = models.CharField(max_length=1, choices=fun, verbose_name='مسئول', null=True, blank=True)
     TaskTypeID = models.ForeignKey('TaskType', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع وظیفه')
-    JobCategoryID = models.ForeignKey('JobCategory', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='نوع شغل')
+    JobCategoryID = models.ForeignKey('JobCategory', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='نوع شغل')
     AssetClassID = models.ForeignKey('AssetClass', on_delete=models.RESTRICT, null=True, blank=False,
                                            verbose_name='کلاس تجهیز')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -526,7 +526,7 @@ class Personnel(models.Model):
     PersonnelNetCode = models.CharField(max_length=100, verbose_name='کد نت پرسنل')
     PersonnelName = models.CharField(max_length=200, verbose_name='نام پرسنل')
     PersonnelFamily = models.CharField(max_length=200, verbose_name='فامیل پرسنل')
-    PersonnelMobile = models.CharField(max_length=100, verbose_name='شماره پرسنل')
+    PersonnelMobile = models.CharField(max_length=100, verbose_name='شماره پرسنل', null=True, blank=True)
     DepartmentID = models.ForeignKey('Department', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دپارتمان')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -796,7 +796,7 @@ class Frequency(models.Model):
 class WOTemplateType(models.Model):
     WOTemplateTypeCode = models.CharField(max_length=100, verbose_name='کد نوع برنامه')
     WOTemplateTypeName = models.CharField(max_length=200, verbose_name='نام نوع برنامه')
-    WOTemplateTypeDescription = models.TextField(verbose_name='توضیحات', blank=True)
+    WOTemplateTypeDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 

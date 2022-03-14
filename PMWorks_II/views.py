@@ -653,7 +653,7 @@ class AssetClassTaskView(generics.ListCreateAPIView):
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
                   'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
-    ordering_fields = '__all__'
+    ordering_fields = ['id', 'TaskCode', 'TaskName', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo', 'Functor', 'TaskTypeID__TaskTypeName', 'JobCategoryID__JobCategoryName',]
 
 
 class AssetClassTaskCreate(generics.ListCreateAPIView):
@@ -662,7 +662,7 @@ class AssetClassTaskCreate(generics.ListCreateAPIView):
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
                   'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
-    ordering_fields = '__all__'
+    ordering_fields = ['id', 'TaskCode', 'TaskName', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo', 'Functor', 'TaskTypeID__TaskTypeName', 'JobCategoryID__JobCategoryName',]
 
 
 class AssetClassTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
@@ -872,10 +872,11 @@ class FailureAssetModeView(generics.ListCreateAPIView):
         asset=self.request.query_params.get('AssetClassID', '')
         if asset:
             assetclass=AssetSubdivision.objects.filter(id = asset)
+            print('as', queryset.filter(AssetClassID = assetclass[0].AssetChildID.id))
             return queryset.filter(AssetClassID = assetclass[0].AssetChildID)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains'], 'FailureModeDescription': ['icontains'], 'AssetClassID': ['exact']}
+    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains']}
     ordering_fields = '__all__'
 
 
@@ -887,10 +888,11 @@ class FailureAssetModeCreate(generics.ListCreateAPIView):
         asset=self.request.query_params.get('AssetClassID', '')
         if asset:
             assetclass=AssetSubdivision.objects.filter(id = asset)
+            print('as', queryset.filter(AssetClassID = assetclass[0].AssetChildID.id))
             return queryset.filter(AssetClassID = assetclass[0].AssetChildID.id)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains'], 'FailureModeDescription': ['icontains'], 'AssetClassID': ['exact']}
+    filter_fields = {'id': ['exact'], 'FailureModeCode': ['icontains'], 'FailureModeName': ['icontains']}
     ordering_fields = '__all__'
 
 
