@@ -3,9 +3,9 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     JobCategory, Department, Personnel, AssetPriority, Location, Asset, AssetSubdivision, SparePartDimension, \
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
-    WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
-    PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOActivityTemplateTbl, TemplateSchualingDate, WOStatus, WRStatus, \
-    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus, WorkflowLevelStatusShow
+    WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
+    PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, TemplateSchualingDate, WOStatus, WRStatus, \
+    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity
 from django.contrib.auth.models import User
 from drf_extra_fields.fields import Base64FileField
 
@@ -235,7 +235,7 @@ class WorkPrioritySerializer(serializers.ModelSerializer):
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
-        fields = ['id', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID', 'DepartmentID', 'DateOfStart', 'DateOfFinish']
+        fields = ['id', 'WorkOrderType', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID', 'DepartmentID', 'DateOfStart', 'DateOfFinish']
 
 
 class WOSupplierSerializer(serializers.ModelSerializer):
@@ -274,12 +274,6 @@ class WOTaskSerializer(serializers.ModelSerializer):
         fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo']
 
 
-class FrequencySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Frequency
-        fields = ['id', 'FrequencyCode', 'FrequencyName']
-
-
 class WOTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOTemplate
@@ -291,7 +285,7 @@ class WOTemplateSchualingSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOTemplateSchualing
         fields = ['id', 'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
-                  'WOTemplateID', 'FrequencyID']
+                  'WOTemplateID', 'FrequencyName']
 
 
 class WOTemplateTypeSerializer(serializers.ModelSerializer):
@@ -300,10 +294,16 @@ class WOTemplateTypeSerializer(serializers.ModelSerializer):
         fields = ['id', 'WOTemplateTypeCode', 'WOTemplateTypeName', 'WOTemplateTypeDescription']
 
 
-class WOActivityTemplateSerializer(serializers.ModelSerializer):
+class WOTemplateAssetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WOActivityTemplateTbl
-        fields = ['id', 'WOTemplateID', 'AssetClassTaskID', 'AssetSubdivisionID']
+        model = WOTemplateAsset
+        fields = ['id', 'WOTemplateID', 'AssetSubdivisionID']
+
+
+class WOTemplateActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WOTemplateActivity
+        fields = ['id', 'WOTemplateAssetID', 'TaskID']
 
 
 
@@ -327,7 +327,7 @@ class UserSerializer(serializers.ModelSerializer):
 class TemplateSchualingDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TemplateSchualingDate
-        fields = ['id', 'TemplateSchualingDate', 'WOTemplateSchualingID', 'StatusOfDo']
+        fields = ['id', 'SchualingDate', 'SchedualingAlarmDate', 'WOTemplateSchualingID', 'StatusOfDo', 'WorkOrderID']
 
 class StatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -399,6 +399,7 @@ class WorkOrderNewSerializer(serializers.Serializer):
     DateOfFinish = serializers.DateField()
     WorkRequestID__AssetSubdivisionID =serializers.IntegerField()
     WorkRequestID__FailureModeID = serializers.IntegerField()
+    WorkOrderType = serializers.CharField()
 
 
 class WOTaskorderSerializer(serializers.ModelSerializer):
@@ -418,3 +419,14 @@ class WorkflowLevelStatusShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkflowLevelStatusShow
         fields = ['id', 'StatusID', 'WorkflowLevelStatusID']
+
+
+class WOTemplateAssetNewSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    WOTemplateID__WOTemplateCode = serializers.CharField()
+    WOTemplateID__WOTemplateName = serializers.CharField()
+    WOTemplateID = serializers.IntegerField()
+    AssetSubdivisionID__AssetCode = serializers.CharField()
+    AssetSubdivisionID__AssetName = serializers.CharField()
+    AssetSubdivisionID = serializers.IntegerField()
+

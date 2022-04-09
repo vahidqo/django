@@ -7,7 +7,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     JobCategory, Department, Personnel, AssetPriority, Location, Asset, AssetSubdivision, SparePartDimension, \
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
-    WOSparePart, WOTask, Frequency, WOTemplate, WOTemplateSchualing, AssetClassSpecificData
+    WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData
 
 
 @admin.register(AssetCategory)
@@ -411,14 +411,6 @@ class WOTaskAdmin(admin.ModelAdmin):
     ordering = ['Create']
 
 
-@admin.register(Frequency)
-class FrequencyAdmin(admin.ModelAdmin):
-    list_display = ('FrequencyCode', 'FrequencyName', 'Create')
-    list_filter = ('FrequencyCode', 'FrequencyName', 'Create')
-    search_fields = ('FrequencyCode', 'FrequencyName')
-    ordering = ['Create', 'FrequencyCode']
-
-
 @admin.register(WOTemplate)
 class WOTemplateAdmin(admin.ModelAdmin):
     list_display = (
@@ -435,14 +427,11 @@ class WOTemplateAdmin(admin.ModelAdmin):
 @admin.register(WOTemplateSchualing)
 class WOTemplateSchualingAdmin(admin.ModelAdmin):
     list_display = ('WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'AmountFrequency', 'Status',
-                    'WOTemplateID_Name', 'FrequencyID_Name', 'Create')
+                    'WOTemplateID_Name', 'FrequencyName', 'Create')
 
     def WOTemplateID_Name(self, obj):
         return obj.WOTemplateID.WOTemplateName
 
-    def FrequencyID_Name(self, obj):
-        return obj.FrequencyID.FrequencyName
-
     list_filter = (
-        'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'WOTemplateID', 'FrequencyID', 'Create')
+        'WOTemplateSchualingStartDate', 'WOTemplateSchualingFinishDate', 'WOTemplateID', 'FrequencyName', 'Create')
     ordering = ['Create']
