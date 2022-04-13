@@ -11,7 +11,8 @@ def transfer_daily_data():
             instance=WorkOrder.objects.create(WODateOfRegistration=i.SchedualingAlarmDate, WODescription=i.WOTemplateSchualingID.WOTemplateID.WOTemplateName,
                                      DateOfPlanStart=i.SchualingDate,
                                      DateOfPlanFinish=i.SchualingDate+timedelta(days=i.WOTemplateSchualingID.WOTemplateID.WOTemplateDurationDay, hours=i.WOTemplateSchualingID.WOTemplateID.WOTemplateDurationHour),
-                                     DepartmentID=i.WOTemplateSchualingID.WOTemplateID.DepartmentID, WorkOrderType='1')
+                                     DepartmentID=i.WOTemplateSchualingID.WOTemplateID.DepartmentID, WorkOrderType='1',
+                                              WOTemplateCode=i.WOTemplateSchualingID.WOTemplateID.WOTemplateCode)
 
             TemplateSchualingDate.objects.filter(id=i.id).update(WorkOrderID=instance.id, StatusOfDo = True)
             print('i', instance)

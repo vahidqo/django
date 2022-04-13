@@ -235,7 +235,7 @@ class WorkPrioritySerializer(serializers.ModelSerializer):
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
-        fields = ['id', 'WorkOrderType', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID', 'DepartmentID', 'DateOfStart', 'DateOfFinish']
+        fields = ['id', 'WorkOrderType', 'WOTemplateCode', 'WODateOfRegistration', 'WODescription', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID', 'StatusID', 'DepartmentID', 'DateOfStart', 'DateOfFinish']
 
 
 class WOSupplierSerializer(serializers.ModelSerializer):
@@ -352,7 +352,7 @@ class WOStatusSerializer(serializers.ModelSerializer):
 class WorkflowLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkflowLevel
-        fields = ['id', 'WorkflowLevelName']
+        fields = ['id', 'WorkflowLevelName', 'WorkflowLevelType']
 
 class WorkflowLevelStatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -400,6 +400,7 @@ class WorkOrderNewSerializer(serializers.Serializer):
     WorkRequestID__AssetSubdivisionID =serializers.IntegerField()
     WorkRequestID__FailureModeID = serializers.IntegerField()
     WorkOrderType = serializers.CharField()
+    WOTemplateCode = serializers.CharField()
 
 
 class WOTaskorderSerializer(serializers.ModelSerializer):

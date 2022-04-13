@@ -695,7 +695,7 @@ class WorkRequestRetrive(generics.RetrieveUpdateDestroyAPIView):
 
 class WorkOrderView(generics.ListCreateAPIView):
     serializer_class = WorkOrderNewSerializer
-    queryset = WorkOrder.objects.all().values('id', 'WorkOrderType', 'DateOfStart','DateOfFinish','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID','DepartmentID')
+    queryset = WorkOrder.objects.all().values('id', 'WOTemplateCode', 'WorkOrderType', 'DateOfStart','DateOfFinish','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID','DepartmentID')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'], 'WorkRequestID': ['exact'], 'StatusID': ['exact'], 'DepartmentID': ['exact'], 'StatusID__OpCl': ['exact']}
     ordering_fields = '__all__'
@@ -1244,14 +1244,14 @@ class WorkflowLevelView(generics.ListCreateAPIView):
     serializer_class = WorkflowLevelSerializer
     queryset = WorkflowLevel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkflowLevelName': ['exact']}
+    filter_fields = {'id': ['exact'], 'WorkflowLevelName': ['exact'], 'WorkflowLevelType': ['exact']}
     ordering_fields = '__all__'
 
 class WorkflowLevelCreate(generics.ListCreateAPIView):
     serializer_class = WorkflowLevelSerializer
     queryset = WorkflowLevel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkflowLevelName': ['exact']}
+    filter_fields = {'id': ['exact'], 'WorkflowLevelName': ['exact'], 'WorkflowLevelType': ['exact']}
     ordering_fields = '__all__'
 
 class WorkflowLevelRetrive(generics.RetrieveUpdateDestroyAPIView):
@@ -1262,14 +1262,14 @@ class WorkflowLevelStatusView(generics.ListCreateAPIView):
     serializer_class = WorkflowLevelStatusSerializer
     queryset = WorkflowLevelStatus.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'StatusID': ['exact'], 'WorkflowLevelID': ['exact'], 'WorkflowLevelStatusPeriority': ['exact']}
+    filter_fields = {'id': ['exact'], 'StatusID': ['exact'], 'WorkflowLevelID': ['exact'], 'WorkflowLevelStatusPeriority': ['exact'], 'WorkflowLevelID__WorkflowLevelType': ['exact']}
     ordering_fields = '__all__'
 
 class WorkflowLevelStatusCreate(generics.ListCreateAPIView):
     serializer_class = WorkflowLevelStatusSerializer
     queryset = WorkflowLevelStatus.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'StatusID': ['exact'], 'WorkflowLevelID': ['exact'], 'WorkflowLevelStatusPeriority': ['exact']}
+    filter_fields = {'id': ['exact'], 'StatusID': ['exact'], 'WorkflowLevelID': ['exact'], 'WorkflowLevelStatusPeriority': ['exact'], 'WorkflowLevelID__WorkflowLevelType': ['exact']}
     ordering_fields = '__all__'
 
 class WorkflowLevelStatusRetrive(generics.RetrieveUpdateDestroyAPIView):
@@ -1402,8 +1402,9 @@ class StatusWRView(generics.ListCreateAPIView):
             wrs=WorkRequest.objects.filter(id = wr)
             wf=WorkflowLevelStatus.objects.filter(StatusID = wrs[0].StatusID)
             st=WorkflowLevelStatusShow.objects.filter(WorkflowLevelStatusID = wf[0].id)
+            stt=WorkflowLevelStatus.objects.filter(StatusID__in = st.values('StatusID'), WorkflowLevelID__WorkflowLevelType='WR')
             
-            return queryset.filter(id__in = st.values('StatusID'))
+            return queryset.filter(id__in = stt.values('StatusID'))
         return queryset
     ordering_fields = '__all__'
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
@@ -1419,8 +1420,9 @@ class StatusWRCreate(generics.ListCreateAPIView):
             wrs=WorkRequest.objects.filter(id = wr)
             wf=WorkflowLevelStatus.objects.filter(StatusID = wrs[0].StatusID)
             st=WorkflowLevelStatusShow.objects.filter(WorkflowLevelStatusID = wf[0].id)
+            stt=WorkflowLevelStatus.objects.filter(StatusID__in = st.values('StatusID'), WorkflowLevelID__WorkflowLevelType='WR')
             
-            return queryset.filter(id__in = st.values('StatusID'))
+            return queryset.filter(id__in = stt.values('StatusID'))
         return queryset
     ordering_fields = '__all__'
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
@@ -1435,8 +1437,9 @@ class StatusWRRetrive(generics.RetrieveUpdateDestroyAPIView):
             wrs=WorkRequest.objects.filter(id = wr)
             wf=WorkflowLevelStatus.objects.filter(StatusID = wrs[0].StatusID)
             st=WorkflowLevelStatusShow.objects.filter(WorkflowLevelStatusID = wf[0].id)
+            stt=WorkflowLevelStatus.objects.filter(StatusID__in = st.values('StatusID'), WorkflowLevelID__WorkflowLevelType='WR')
             
-            return queryset.filter(id__in = st.values('StatusID'))
+            return queryset.filter(id__in = stt.values('StatusID'))            
         return queryset
 
 class StatusWOView(generics.ListCreateAPIView):
@@ -1449,8 +1452,9 @@ class StatusWOView(generics.ListCreateAPIView):
             wrs=WorkOrder.objects.filter(id = wr)
             wf=WorkflowLevelStatus.objects.filter(StatusID = wrs[0].StatusID)
             st=WorkflowLevelStatusShow.objects.filter(WorkflowLevelStatusID = wf[0].id)
+            stt=WorkflowLevelStatus.objects.filter(StatusID__in = st.values('StatusID'), WorkflowLevelID__WorkflowLevelType='WO')
             
-            return queryset.filter(id__in = st.values('StatusID'))
+            return queryset.filter(id__in = stt.values('StatusID'))
         return queryset
     ordering_fields = '__all__'
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
@@ -1466,8 +1470,9 @@ class StatusWOCreate(generics.ListCreateAPIView):
             wrs=WorkOrder.objects.filter(id = wr)
             wf=WorkflowLevelStatus.objects.filter(StatusID = wrs[0].StatusID)
             st=WorkflowLevelStatusShow.objects.filter(WorkflowLevelStatusID = wf[0].id)
+            stt=WorkflowLevelStatus.objects.filter(StatusID__in = st.values('StatusID'), WorkflowLevelID__WorkflowLevelType='WO')
             
-            return queryset.filter(id__in = st.values('StatusID'))
+            return queryset.filter(id__in = stt.values('StatusID'))
         return queryset
     ordering_fields = '__all__'
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
@@ -1482,6 +1487,7 @@ class StatusWORetrive(generics.RetrieveUpdateDestroyAPIView):
             wrs=WorkOrder.objects.filter(id = wr)
             wf=WorkflowLevelStatus.objects.filter(StatusID = wrs[0].StatusID)
             st=WorkflowLevelStatusShow.objects.filter(WorkflowLevelStatusID = wf[0].id)
+            stt=WorkflowLevelStatus.objects.filter(StatusID__in = st.values('StatusID'), WorkflowLevelID__WorkflowLevelType='WO')
             
-            return queryset.filter(id__in = st.values('StatusID'))
+            return queryset.filter(id__in = stt.values('StatusID'))
         return queryset

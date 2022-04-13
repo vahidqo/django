@@ -668,6 +668,7 @@ class WorkOrder(models.Model):
     StatusID = models.ForeignKey('Status', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='وضعيت')
     DepartmentID = models.ForeignKey('Department', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='دپارتمان')
     WorkOrderType = models.TextField(verbose_name='نوع', null=True, blank=True)
+    WOTemplateCode = models.TextField(verbose_name='کد برنامه', null=True, blank=True)
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
@@ -1036,6 +1037,7 @@ post_save.connect(save_WOupdate, sender=WOStatus)
 
 class WorkflowLevel(models.Model):
     WorkflowLevelName = models.CharField(max_length=200, verbose_name='نام سطح')
+    WorkflowLevelType = models.CharField(max_length=200, verbose_name='نوع سطح')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
 
