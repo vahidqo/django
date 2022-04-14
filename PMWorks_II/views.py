@@ -711,7 +711,7 @@ class WorkOrderCreate(generics.ListCreateAPIView):
 
 class WorkOrderRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WorkOrderNewSerializer
-    queryset = WorkOrder.objects.all().values('id', 'WorkOrderType','DateOfStart','DateOfFinish','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID','DepartmentID')
+    queryset = WorkOrder.objects.all().values('id', 'WOTemplateCode', 'WorkOrderType','DateOfStart','DateOfFinish','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID','DepartmentID')
 
 
 class WOSupplierView(generics.ListCreateAPIView):
