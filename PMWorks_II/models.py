@@ -505,6 +505,15 @@ class AssetClassTask(models.Model):
         return "{}-{}".format(self.TaskCode, self.TaskName)
 
 
+def save_Task(sender, instance, **kwargs):
+    if isinstance(instance.DurationOfDo, int) == False:
+        instance.DurationOfDo = None
+    if isinstance(instance.FrequencyAmount, int) == False:
+        instance.FrequencyAmount = None
+        
+pre_save.connect(save_Task, sender=AssetClassTask)
+
+
 class Department(models.Model):
     DepartmentCode = models.CharField(max_length=100, verbose_name='کد دپارتمان')
     DepartmentName = models.CharField(max_length=200, verbose_name='نام دپارتمان')

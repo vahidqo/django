@@ -193,6 +193,14 @@ class AssetClassTaskSerializer(serializers.ModelSerializer):
         model = AssetClassTask
         fields = ['id', 'TaskCode', 'TaskName', 'TaskDescription', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo',
                   'Functor', 'TaskTypeID', 'JobCategoryID', 'AssetClassID']
+        extra_kwargs = {
+            'FrequencyAmount': {'required': False,
+                                 'allow_null': True
+                                 },
+            'DurationOfDo': {'required': False,
+                                 'allow_null': True
+                                 },
+        };
 
 
 class SupplierSerializer(serializers.ModelSerializer):

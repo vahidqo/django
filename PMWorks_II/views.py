@@ -28,6 +28,9 @@ from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from django_filters import rest_framework as filters
 import django_filters
 from django.contrib.auth.models import User
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
 
 class NumberInFilter(django_filters.BaseInFilter, django_filters.NumberFilter):
     pass
@@ -645,6 +648,33 @@ class SupplierSpecificDataCreate(generics.ListCreateAPIView):
 class SupplierSpecificDataRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SupplierSpecificDataSerializer
     queryset = SupplierSpecificData.objects.all()
+
+
+@csrf_exempt
+def AssetClassTask_list(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    if request.method == 'GET':
+        AssetClassTasks = AssetClassTask.objects.all()
+        serializer = AssetClassTaskSerializer(AssetClassTasks, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        print('dddd', data)
+        if 'DurationOfDo' in data:
+            if isinstance(data['DurationOfDo'], int) == False:
+                data['DurationOfDo'] = None
+        if 'FrequencyAmount' in data:
+            if isinstance(data['FrequencyAmount'], int) == False:
+                data['FrequencyAmount'] = None
+        print('d2', data)
+        serializer = AssetClassTaskSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
 
 class AssetClassTaskView(generics.ListCreateAPIView):
