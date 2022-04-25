@@ -1334,8 +1334,10 @@ class WRTaskView(generics.ListCreateAPIView):
             assets=WorkOrder.objects.filter(id = asset)
             return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
         return queryset
-    ordering_fields = '__all__'
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
+    ordering_fields = ['id', 'TaskCode', 'TaskName', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo', 'Functor', 'TaskTypeID__TaskTypeName', 'JobCategoryID__JobCategoryName',]
 
 
 class WRTaskCreate(generics.ListCreateAPIView):
@@ -1349,9 +1351,9 @@ class WRTaskCreate(generics.ListCreateAPIView):
             return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['icontains'], 'FrequencyAmount': ['icontains'], 'DurationOfDo': ['icontains'],
-                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact']}
-    ordering_fields = '__all__'
+    filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
+                  'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
+    ordering_fields = ['id', 'TaskCode', 'TaskName', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo', 'Functor', 'TaskTypeID__TaskTypeName', 'JobCategoryID__JobCategoryName',]
 
 class WRTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AssetClassTaskSerializer
