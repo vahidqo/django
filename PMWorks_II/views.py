@@ -1332,14 +1332,20 @@ class WRTaskView(generics.ListCreateAPIView):
         asset=self.request.query_params.get('WorkOrderID', '')
         if asset:
             assets=WorkOrder.objects.filter(id = asset)
-            return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
+            if assets[0].WorkRequestID:
+                return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
+            else:
+                pm = TemplateSchualingDate.objects.filter(WorkOrderID = asset)
+                pm2 = WOTemplateSchualing.objects.filter(id = pm[0].WOTemplateSchualingID.id)
+                pm3 = WOTemplateAsset.objects.filter(WOTemplateID = pm2[0].WOTemplateID)
+                pm4 = AssetSubdivision.objects.filter(id__in = pm3.values('AssetSubdivisionID'))
+                return queryset.filter(AssetClassID__in = pm4.values('AssetChildID'))        
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
                   'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
     ordering_fields = ['id', 'TaskCode', 'TaskName', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo', 'Functor', 'TaskTypeID__TaskTypeName', 'JobCategoryID__JobCategoryName',]
-
-
+    
 class WRTaskCreate(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer
 
@@ -1348,13 +1354,20 @@ class WRTaskCreate(generics.ListCreateAPIView):
         asset=self.request.query_params.get('WorkOrderID', '')
         if asset:
             assets=WorkOrder.objects.filter(id = asset)
-            return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
+            if assets[0].WorkRequestID:
+                return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
+            else:
+                pm = TemplateSchualingDate.objects.filter(WorkOrderID = asset)
+                pm2 = WOTemplateSchualing.objects.filter(id = pm[0].WOTemplateSchualingID.id)
+                pm3 = WOTemplateAsset.objects.filter(WOTemplateID = pm2[0].WOTemplateID)
+                pm4 = AssetSubdivision.objects.filter(id__in = pm3.values('AssetSubdivisionID'))
+                return queryset.filter(AssetClassID__in = pm4.values('AssetChildID'))        
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
                   'Functor': ['icontains'], 'TaskTypeID': ['exact'], 'JobCategoryID': ['exact'], 'AssetClassID': ['exact'], 'TaskTypeID__TaskTypeName': ['icontains'], 'JobCategoryID__JobCategoryName': ['icontains']}
     ordering_fields = ['id', 'TaskCode', 'TaskName', 'FrequencyName', 'FrequencyAmount', 'DurationOfDo', 'Functor', 'TaskTypeID__TaskTypeName', 'JobCategoryID__JobCategoryName',]
-
+    
 class WRTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AssetClassTaskSerializer
 
