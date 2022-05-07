@@ -707,6 +707,21 @@ class WOSupplier(models.Model):
         return "{}-{}".format(self.WorkOrderID, self.SupplierID)
 
 
+class WOAssetSubdivision(models.Model):
+    WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
+    AssetSubdivisionID = models.ForeignKey('AssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='تامین کنده')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'تجهيز دستور کار'
+        verbose_name_plural = 'تجهيزات دستور کار'
+
+    def __str__(self):
+        return "{}-{}".format(self.WorkOrderID, self.AssetSubdivisionID)
+
+
 class WOPersonnel(models.Model):
     WorkDate = models.DateField(verbose_name='تاریخ انجام')
     WorkTime = models.IntegerField(verbose_name='مدت زمان انجام')
@@ -774,7 +789,7 @@ class WOSparePart(models.Model):
 
 
 class WOTask(models.Model):
-    WorkOrderID = models.ForeignKey('WorkOrder', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
+    WOAssetSubdivisionID = models.ForeignKey('WOAssetSubdivision', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='دستور کار')
     TaskID = models.ForeignKey('AssetClassTask', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='وظیفه')
     WOTaskSituationOfDo = models.CharField(max_length=50, verbose_name='وضعیت انجام')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -786,7 +801,7 @@ class WOTask(models.Model):
         verbose_name_plural = 'وظایف دستور کار'
 
     def __str__(self):
-        return "{}-{}".format(self.WorkOrderID, self.TaskID)
+        return "{}-{}".format(self.WOAssetSubdivisionID, self.TaskID)
 
 
 class WOTemplateType(models.Model):
@@ -970,7 +985,17 @@ def save_WOS(sender, instance, created, **kwargs):
     if created:
         st = WorkflowLevelStatus.objects.filter(WorkflowLevelID = 4, WorkflowLevelStatusPeriority = 0)
         WOStatus.objects.create(WorkOrderID=instance, StatusID=st[0].StatusID, StatusDate=datetime.date(datetime.now()), StatusTime=datetime.time(datetime.now()))
-
+        if instance.WorkRequestID:
+            WOAssetSubdivision.objects.create(WorkOrderID=instance, AssetSubdivisionID=instance.WorkRequestID.AssetSubdivisionID)
+        elif instance.WOTemplateCode:
+            idt = WOTemplate.objects.filter(WOTemplateCode=instance.WOTemplateCode)
+            ida = WOTemplateAsset.objects.filter(WOTemplateID=idt[0].id)
+            for i in ida:
+                ins = WOAssetSubdivision.objects.create(WorkOrderID=instance, AssetSubdivisionID=i.AssetSubdivisionID)
+                task = WOTemplateActivity.objects.filter(WOTemplateAssetID=i.id)
+                for j in task:
+                    WOTask.objects.create(WOAssetSubdivisionID=ins.id, TaskID=j.TaskID, WOTaskSituationOfDo="ND")
+                    
 
 post_save.connect(save_WOS, sender=WorkOrder)
 

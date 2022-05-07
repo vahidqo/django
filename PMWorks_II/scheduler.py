@@ -21,7 +21,7 @@ def start():
     # - Add a scheduled job to the job store on application initialization
     # - The job will execute a model class method at midnight each day
     # - replace_existing in combination with the unique ID prevents duplicate copies of the job
-    scheduler.add_job(transfer_daily_data, 'interval', hours=6, id="my_class_method", replace_existing=True)
+    scheduler.add_job(transfer_daily_data, 'interval', seconds=20000, id="my_class_method", replace_existing=True)
 
     # Add the scheduled jobs to the Django admin interface
     register_events(scheduler)

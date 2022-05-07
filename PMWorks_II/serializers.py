@@ -5,7 +5,8 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
     WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
     PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, TemplateSchualingDate, WOStatus, WRStatus, \
-    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity
+    WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity, \
+    WOAssetSubdivision
 from django.contrib.auth.models import User
 from drf_extra_fields.fields import Base64FileField
 
@@ -276,10 +277,16 @@ class WOSparePartSerializer(serializers.ModelSerializer):
         fields = ['id', 'WOTaskID', 'SparePartID', 'SparePartAmount']
 
 
+class WOAssetSubdivisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WOAssetSubdivision
+        fields = ['id', 'WorkOrderID', 'AssetSubdivisionID']
+
+        
 class WOTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = WOTask
-        fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo']
+        fields = ['id', 'WOAssetSubdivisionID', 'TaskID', 'WOTaskSituationOfDo']
 
 
 class WOTemplateSerializer(serializers.ModelSerializer):
@@ -413,16 +420,16 @@ class WorkOrderNewSerializer(serializers.Serializer):
 
 class WOTaskorderSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
-    WorkOrderID = serializers.CharField()
-    TaskID = serializers.CharField()
+    WOAssetSubdivisionID = serializers.IntegerField()
+    TaskID = serializers.IntegerField()
     WOTaskSituationOfDo = serializers.CharField()
-    TaskID__TaskName = serializers.CharField()
-    TaskID__TaskCode = serializers.CharField()
-    
+    WOAssetSubdivisionID__WorkOrderID = serializers.IntegerField()
+    WOAssetSubdivisionID__AssetSubdivisionID = serializers.IntegerField()
+
     class Meta:
         model = WOTask
-        fields = ['id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', 'TaskID__TaskName', 'TaskID__TaskCode']
-    
+        fields = '__all__'
+
     
 class WorkflowLevelStatusShowSerializer(serializers.ModelSerializer):
     class Meta:

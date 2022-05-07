@@ -7,7 +7,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, \
     AssetSubdivisionSparePart, PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOTemplate, \
     TemplateSchualingDate, Status, WRWORelationStatus, WRStatus, WOStatus, WorkflowLevel, \
-    WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity
+    WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity, WOAssetSubdivision
 
 from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetClassSubdivisionSerializer, \
     AssetClassSpecificDataSerializer, SpecificDataSerializer, FailureModeSerializer, LocationSerializer, \
@@ -21,7 +21,8 @@ from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetCla
     WOTemplateTypeSerializer, WOTemplateSerializer, WOTemplateSchualingSerializer, \
     TemplateSchualingDateSerializer, StatusSerializer, WRWORelationStatusSerializer, WRStatusSerializer, WOStatusSerializer, \
     WorkflowLevelSerializer, WorkflowLevelStatusSerializer, WorkOrderNewSerializer, WOTaskorderSerializer, \
-    WorkflowLevelStatusShowSerializer, WOTemplateAssetSerializer, WOTemplateActivitySerializer, WOTemplateAssetNewSerializer
+    WorkflowLevelStatusShowSerializer, WOTemplateAssetSerializer, WOTemplateActivitySerializer, WOTemplateAssetNewSerializer, \
+    WOAssetSubdivisionSerializer
 
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
@@ -769,7 +770,7 @@ class WOPersonnelView(generics.ListCreateAPIView):
     serializer_class = WOPersonnelSerializer
     queryset = WOPersonnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkDate': ['icontains'], 'WorkTime': ['icontains'], 'WOTaskID': ['exact'], 'PersonnelID': ['exact'], 'WOTaskID__WorkOrderID': ['exact']}
+    filter_fields = {'id': ['exact'], 'WorkDate': ['icontains'], 'WorkTime': ['icontains'], 'WOTaskID': ['exact'], 'PersonnelID': ['exact'], 'WOTaskID__WOAssetSubdivisionID__WorkOrderID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -777,7 +778,7 @@ class WOPersonnelCreate(generics.ListCreateAPIView):
     serializer_class = WOPersonnelSerializer
     queryset = WOPersonnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkDate': ['icontains'], 'WorkTime': ['icontains'], 'WOTaskID': ['exact'], 'PersonnelID': ['exact'], 'WOTaskID__WorkOrderID': ['exact']}
+    filter_fields = {'id': ['exact'], 'WorkDate': ['icontains'], 'WorkTime': ['icontains'], 'WOTaskID': ['exact'], 'PersonnelID': ['exact'], 'WOTaskID__WOAssetSubdivisionID__WorkOrderID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -832,7 +833,7 @@ class WOSparePartView(generics.ListCreateAPIView):
     serializer_class = WOSparePartSerializer
     queryset = WOSparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WOTaskID': ['exact'], 'SparePartID': ['exact'], 'SparePartAmount': ['icontains'], 'WOTaskID__WorkOrderID': ['exact']}
+    filter_fields = {'id': ['exact'], 'WOTaskID': ['exact'], 'SparePartID': ['exact'], 'SparePartAmount': ['icontains'], 'WOTaskID__WOAssetSubdivisionID__WorkOrderID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -840,7 +841,7 @@ class WOSparePartCreate(generics.ListCreateAPIView):
     serializer_class = WOSparePartSerializer
     queryset = WOSparePart.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WOTaskID': ['exact'], 'SparePartID': ['exact'], 'SparePartAmount': ['icontains'], 'WOTaskID__WorkOrderID': ['exact']}
+    filter_fields = {'id': ['exact'], 'WOTaskID': ['exact'], 'SparePartID': ['exact'], 'SparePartAmount': ['icontains'], 'WOTaskID__WOAssetSubdivisionID__WorkOrderID': ['exact']}
     ordering_fields = '__all__'
 
 
@@ -849,27 +850,68 @@ class WOSparePartRetrive(generics.RetrieveUpdateDestroyAPIView):
     queryset = WOSparePart.objects.all()
 
 
-class WOTaskView(generics.ListCreateAPIView):
-    serializer_class = WOTaskSerializer
-    queryset = WOTask.objects.all()
+class WOAssetSubdivisionView(generics.ListCreateAPIView):
+    serializer_class = WOAssetSubdivisionSerializer
+    queryset = WOAssetSubdivision.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['icontains']}
+    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'AssetSubdivisionID': ['exact']}
     ordering_fields = '__all__'
 
+
+class WOAssetSubdivisionCreate(generics.ListCreateAPIView):
+    serializer_class = WOAssetSubdivisionSerializer
+    queryset = WOAssetSubdivision.objects.all()
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'AssetSubdivisionID': ['exact']}
+    ordering_fields = '__all__'
+
+
+class WOAssetSubdivisionRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WOAssetSubdivisionSerializer
+    queryset = WOAssetSubdivision.objects.all()
+    
 
 class WOTaskCreate(generics.ListCreateAPIView):
     serializer_class = WOTaskSerializer
     queryset = WOTask.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkOrderID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['icontains']}
+    filter_fields = {'id': ['exact'], 'WOAssetSubdivisionID': ['exact'], 'WOAssetSubdivisionID__AssetSubdivisionID': ['exact'], 'WOAssetSubdivisionID__WorkOrderID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['exact']}
+    ordering_fields = '__all__'
+
+
+class WOTaskView(generics.ListCreateAPIView):
+    serializer_class = WOTaskSerializer
+    queryset = WOTask.objects.all()
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'WOAssetSubdivisionID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['icontains'], 'WOAssetSubdivisionID__AssetSubdivisionID': ['exact'], 'WOAssetSubdivisionID__WorkOrderID': ['exact']}
     ordering_fields = '__all__'
 
 
 class WOTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
-    #serializer_class = WOTaskorderSerializer
-    #queryset = WOTask.objects.all().values('id', 'WorkOrderID', 'TaskID', 'WOTaskSituationOfDo', 'TaskID__TaskName', 'TaskID__TaskCode')
     serializer_class = WOTaskSerializer
     queryset = WOTask.objects.all()
+
+
+class WOTaskOrderCreate(generics.ListCreateAPIView):
+    serializer_class = WOTaskorderSerializer
+    queryset = WOTask.objects.all().values('id','WOAssetSubdivisionID','TaskID','WOTaskSituationOfDo','WOAssetSubdivisionID__AssetSubdivisionID','WOAssetSubdivisionID__WorkOrderID')
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'WOAssetSubdivisionID': ['exact'], 'WOAssetSubdivisionID__AssetSubdivisionID': ['exact'], 'WOAssetSubdivisionID__WorkOrderID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['exact']}
+    ordering_fields = '__all__'
+
+
+class WOTaskOrderView(generics.ListCreateAPIView):
+    serializer_class = WOTaskorderSerializer
+    queryset = WOTask.objects.all().values('id','WOAssetSubdivisionID','TaskID','WOTaskSituationOfDo','WOAssetSubdivisionID__AssetSubdivisionID','WOAssetSubdivisionID__WorkOrderID')
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'WOAssetSubdivisionID': ['exact'], 'TaskID': ['exact'], 'WOTaskSituationOfDo': ['icontains'], 'WOAssetSubdivisionID__AssetSubdivisionID': ['exact'], 'WOAssetSubdivisionID__WorkOrderID': ['exact']}
+    ordering_fields = '__all__'
+
+
+class WOTaskOrderRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = WOTaskorderSerializer
+    queryset = WOTask.objects.all().values('id','WOAssetSubdivisionID','TaskID','WOTaskSituationOfDo','WOAssetSubdivisionID__AssetSubdivisionID','WOAssetSubdivisionID__WorkOrderID')
+
     
 class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
@@ -1329,17 +1371,11 @@ class WRTaskView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = AssetClassTask.objects.all()
-        asset=self.request.query_params.get('WorkOrderID', '')
+        asset=self.request.query_params.get('WOAssetSubdivisionID', '')
         if asset:
-            assets=WorkOrder.objects.filter(id = asset)
-            if assets[0].WorkRequestID:
-                return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
-            else:
-                pm = TemplateSchualingDate.objects.filter(WorkOrderID = asset)
-                pm2 = WOTemplateSchualing.objects.filter(id = pm[0].WOTemplateSchualingID.id)
-                pm3 = WOTemplateAsset.objects.filter(WOTemplateID = pm2[0].WOTemplateID)
-                pm4 = AssetSubdivision.objects.filter(id__in = pm3.values('AssetSubdivisionID'))
-                return queryset.filter(AssetClassID__in = pm4.values('AssetChildID'))        
+            assets=WOAssetSubdivision.objects.filter(id = asset)
+            tasks=AssetSubdivision.objects.filter(id__in = assets.values('AssetSubdivisionID'))
+            return queryset.filter(AssetClassID__in = tasks.values('AssetChildID'))        
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
@@ -1351,17 +1387,11 @@ class WRTaskCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = AssetClassTask.objects.all()
-        asset=self.request.query_params.get('WorkOrderID', '')
+        asset=self.request.query_params.get('WOAssetSubdivisionID', '')
         if asset:
-            assets=WorkOrder.objects.filter(id = asset)
-            if assets[0].WorkRequestID:
-                return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
-            else:
-                pm = TemplateSchualingDate.objects.filter(WorkOrderID = asset)
-                pm2 = WOTemplateSchualing.objects.filter(id = pm[0].WOTemplateSchualingID.id)
-                pm3 = WOTemplateAsset.objects.filter(WOTemplateID = pm2[0].WOTemplateID)
-                pm4 = AssetSubdivision.objects.filter(id__in = pm3.values('AssetSubdivisionID'))
-                return queryset.filter(AssetClassID__in = pm4.values('AssetChildID'))        
+            assets=WOAssetSubdivision.objects.filter(id = asset)
+            tasks=AssetSubdivision.objects.filter(id__in = assets.values('AssetSubdivisionID'))
+            return queryset.filter(AssetClassID__in = tasks.values('AssetChildID'))        
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'TaskCode': ['icontains'], 'TaskName': ['icontains'], 'TaskDescription': ['icontains'], 'FrequencyName': ['exact'], 'FrequencyAmount': ['exact'], 'DurationOfDo': ['icontains'],
@@ -1373,10 +1403,11 @@ class WRTaskRetrive(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         queryset = AssetClassTask.objects.all()
-        asset=self.request.query_params.get('WorkOrderID', '')
+        asset=self.request.query_params.get('WOAssetSubdivisionID', '')
         if asset:
-            assets=WorkOrder.objects.filter(id = asset)
-            return queryset.filter(AssetClassID = assets[0].WorkRequestID.AssetSubdivisionID.AssetChildID)
+            assets=WOAssetSubdivision.objects.filter(id = asset)
+            tasks=AssetSubdivision.objects.filter(id__in = assets.values('AssetSubdivisionID'))
+            return queryset.filter(AssetClassID__in = tasks.values('AssetChildID'))        
         return queryset
 
 class TaskTempView(generics.ListCreateAPIView):

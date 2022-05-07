@@ -399,15 +399,12 @@ class WOSparePartAdmin(admin.ModelAdmin):
 
 @admin.register(WOTask)
 class WOTaskAdmin(admin.ModelAdmin):
-    list_display = ('WorkOrderID_Name', 'TaskID_Name', 'WOTaskSituationOfDo', 'Create')
-
-    def WorkOrderID_Name(self, obj):
-        return obj.WorkOrderID.id
+    list_display = ('WOAssetSubdivisionID', 'TaskID_Name', 'WOTaskSituationOfDo', 'Create')
 
     def TaskID_Name(self, obj):
         return obj.TaskID.TaskName
 
-    list_filter = ('WorkOrderID', 'TaskID', 'Create')
+    list_filter = ('WOAssetSubdivisionID', 'TaskID', 'Create')
     ordering = ['Create']
 
 

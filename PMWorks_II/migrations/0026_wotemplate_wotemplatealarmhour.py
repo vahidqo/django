@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='wotemplate',
             name='WOTemplateAlarmHour',
-            field=models.TimeField(verbose_name='ساعت اعلام تناوب'),
+            field=models.IntegerField(verbose_name='ساعت اعلام تناوب'),
             preserve_default=False,
         ),
     ]

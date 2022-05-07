@@ -14,6 +14,4 @@ def transfer_daily_data():
                                      DepartmentID=i.WOTemplateSchualingID.WOTemplateID.DepartmentID, WorkOrderType='1',
                                               WOTemplateCode=i.WOTemplateSchualingID.WOTemplateID.WOTemplateCode)
 
-            TemplateSchualingDate.objects.filter(id=i.id).update(WorkOrderID=instance.id, StatusOfDo = True)
-            print('i', instance)
-            
+            TemplateSchualingDate.objects.filter(id=i.id).update(WorkOrderID=instance.id, StatusOfDo = True)            
