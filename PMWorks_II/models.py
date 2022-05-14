@@ -994,7 +994,7 @@ def save_WOS(sender, instance, created, **kwargs):
                 ins = WOAssetSubdivision.objects.create(WorkOrderID=instance, AssetSubdivisionID=i.AssetSubdivisionID)
                 task = WOTemplateActivity.objects.filter(WOTemplateAssetID=i.id)
                 for j in task:
-                    WOTask.objects.create(WOAssetSubdivisionID=ins.id, TaskID=j.TaskID, WOTaskSituationOfDo="ND")
+                    WOTask.objects.create(WOAssetSubdivisionID=ins, TaskID=j.TaskID, WOTaskSituationOfDo="ND")
                     
 
 post_save.connect(save_WOS, sender=WorkOrder)
