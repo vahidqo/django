@@ -32,6 +32,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
+from django.core.validators import EMPTY_VALUES
 
 class NumberInFilter(django_filters.BaseInFilter, django_filters.NumberFilter):
     pass
@@ -332,7 +333,9 @@ class AssetSubdivisionView(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionAssetSerializer
     queryset = AssetSubdivision.objects.all().values('id','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName', 'AssetID__AssetName', 'AssetID__AssetCode', 'AssetID__LocationID__LocationName', 'AssetID__LocationID__LocationCode', 'AssetID__LocationID__LocationCodeChain', 'AssetID__LocationID__LocationNameChain')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'], 'fakelocation': ['exact'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'], 'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains'], 'AssetID__LocationID__LocationCodeChain': ['icontains'], 'AssetID__LocationID__LocationNameChain': ['icontains']} 
+    filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'],
+                     'fakelocation': ['exact'], 'AssetChildID__AssetClassName': ['icontains'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'],
+                     'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains'], 'AssetID__LocationID__LocationCodeChain': ['icontains'], 'AssetID__LocationID__LocationNameChain': ['icontains']} 
     ordering_fields = '__all__'
 
 
@@ -340,7 +343,9 @@ class AssetSubdivisionCreate(generics.ListCreateAPIView):
     serializer_class = AssetSubdivisionAssetSerializer
     queryset = AssetSubdivision.objects.all().values('id','AssetSubdivisionFatherID','AssetID','AssetChildID','tree','fakelocation', 'AssetClassCodeChain', 'AssetClassNameChain', 'idChain', 'AssetCode', 'AssetName', 'AssetID__AssetName', 'AssetID__AssetCode', 'AssetID__LocationID__LocationName', 'AssetID__LocationID__LocationCode', 'AssetID__LocationID__LocationCodeChain', 'AssetID__LocationID__LocationNameChain')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'], 'fakelocation': ['exact'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'], 'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains'], 'AssetID__LocationID__LocationCodeChain': ['icontains'], 'AssetID__LocationID__LocationNameChain': ['icontains']} 
+    filter_fields = {'id': ['exact'], 'AssetID': ['exact'], 'AssetChildID': ['exact'], 'AssetSubdivisionFatherID': ['exact'],'tree': ['exact'],
+                     'fakelocation': ['exact'], 'AssetChildID__AssetClassName': ['icontains'], 'AssetClassCodeChain': ['icontains'], 'AssetClassNameChain': ['icontains'],
+                     'idChain': ['exact'], 'AssetCode': ['icontains'], 'AssetName': ['icontains'], 'AssetID__LocationID__LocationCodeChain': ['icontains'], 'AssetID__LocationID__LocationNameChain': ['icontains']} 
     ordering_fields = '__all__'
 
 
@@ -502,12 +507,32 @@ class DepartmentRetrive(generics.RetrieveUpdateDestroyAPIView):
     queryset = Department.objects.all()
 
 
+class EmptyStringFilter(filters.BooleanFilter):
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        exclude = self.exclude ^ (value is False)
+        method = qs.exclude if exclude else qs.filter
+
+        return method(**{self.field_name: ""})
+
+class PersonnelFilter(filters.FilterSet):
+    id = NumberInFilter(field_namAssetSubdivisione='id', lookup_expr='exact')
+    PersonnelNetCode__isempty = EmptyStringFilter(field_name='PersonnelNetCode')
+    PersonnelNetCode = filters.CharFilter(field_name='PersonnelNetCode', lookup_expr='icontains')
+    PersonnelCode = filters.CharFilter(field_name='PersonnelCode', lookup_expr='icontains')
+    PersonnelName = filters.CharFilter(field_name='PersonnelName', lookup_expr='icontains')
+    PersonnelFamily = filters.CharFilter(field_name='PersonnelFamily', lookup_expr='icontains')
+    DepartmentID__DepartmentName = filters.CharFilter(field_name='DepartmentID__DepartmentName', lookup_expr='icontains')
+    
 class PersonnelView(generics.ListCreateAPIView):
     serializer_class = PersonnelSerializer
     queryset = Personnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'PersonnelCode': ['icontains'], 'PersonnelNetCode': ['icontains'], 'PersonnelName': ['icontains'], 'PersonnelFamily': ['icontains'], 'PersonnelMobile': ['icontains'],
+    filter_fields = {'id': ['exact'], 'PersonnelCode': ['icontains'], 'PersonnelNetCode': ['icontains', 'isnull'], 'PersonnelName': ['icontains'], 'PersonnelFamily': ['icontains'], 'PersonnelMobile': ['icontains'],
                   'DepartmentID': ['exact']}
+    filter_class = PersonnelFilter
     ordering_fields = '__all__'
 
 
@@ -515,8 +540,9 @@ class PersonnelCreate(generics.ListCreateAPIView):
     serializer_class = PersonnelSerializer
     queryset = Personnel.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'PersonnelCode': ['icontains'], 'PersonnelNetCode': ['icontains'], 'PersonnelName': ['icontains'], 'PersonnelFamily': ['icontains'], 'PersonnelMobile': ['icontains'],
+    filter_fields = {'id': ['exact'], 'PersonnelCode': ['icontains'], 'PersonnelNetCode': ['icontains', 'isnull'], 'PersonnelName': ['icontains'], 'PersonnelFamily': ['icontains'], 'PersonnelMobile': ['icontains'],
                   'DepartmentID': ['exact']}
+    filter_class = PersonnelFilter
     ordering_fields = '__all__'
 
 
@@ -706,8 +732,9 @@ class WorkRequestView(generics.ListCreateAPIView):
     queryset = WorkRequest.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'WRDate': ['icontains'], 'WRDateOfRegistration': ['icontains'], 'AssetSubdivisionID': ['exact'], 'FailureModeID': ['exact'],
-                        'WorkPriorityID': ['exact'], 'TypeWrID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact']}
-    ordering_fields = '__all__'
+                        'WorkPriorityID': ['exact'], 'TypeWrID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact'], 'id': ['icontains'],
+                        'AssetSubdivisionID__AssetName': ['icontains'], 'FailureModeID__FailureModeName': ['icontains'], 'WorkPriorityID__WorkPriorityName': ['icontains']}
+    ordering_fields = ['id', 'WRDate', 'AssetSubdivisionID__AssetCode', 'AssetSubdivisionID__AssetName', 'AssetSubdivisionID__AssetClassNameChain', 'FailureModeID__FailureModeName', 'WorkPriorityID__WorkPriorityName', 'WRDescription', 'TypeWrID__TypeWrName', 'StatusID__StatusName',]
 
 
 class WorkRequestCreate(generics.ListCreateAPIView):
@@ -715,8 +742,9 @@ class WorkRequestCreate(generics.ListCreateAPIView):
     queryset = WorkRequest.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'WRDate': ['icontains'], 'WRDateOfRegistration': ['icontains'], 'AssetSubdivisionID': ['exact'], 'FailureModeID': ['exact'],
-                        'WorkPriorityID': ['exact'], 'TypeWrID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact']}
-    ordering_fields = '__all__'
+                        'WorkPriorityID': ['exact'], 'TypeWrID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact'], 'id': ['icontains'],
+                        'AssetSubdivisionID__AssetName': ['icontains'], 'FailureModeID__FailureModeName': ['icontains'], 'WorkPriorityID__WorkPriorityName': ['icontains']}
+    ordering_fields = ['id', 'WRDate', 'AssetSubdivisionID__AssetCode', 'AssetSubdivisionID__AssetName', 'AssetSubdivisionID__AssetClassNameChain', 'FailureModeID__FailureModeName', 'WorkPriorityID__WorkPriorityName', 'WRDescription', 'TypeWrID__TypeWrName', 'StatusID__StatusName',]
 
 
 class WorkRequestRetrive(generics.RetrieveUpdateDestroyAPIView):
@@ -728,16 +756,20 @@ class WorkOrderView(generics.ListCreateAPIView):
     serializer_class = WorkOrderNewSerializer
     queryset = WorkOrder.objects.all().values('id', 'WOTemplateCode', 'WorkOrderType', 'DateOfStart','DateOfFinish','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID','DepartmentID')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'], 'WorkRequestID': ['exact'], 'StatusID': ['exact'], 'DepartmentID': ['exact'], 'StatusID__OpCl': ['exact']}
-    ordering_fields = '__all__'
+    filter_fields = {'id': ['exact'], 'id': ['icontains'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'],
+                     'WorkRequestID': ['exact'],'WorkRequestID__AssetSubdivisionID__AssetName': ['icontains'],'WorkRequestID__FailureModeID__FailureModeName': ['icontains'], 'StatusID': ['exact'],
+                     'DepartmentID': ['exact'], 'DepartmentID__DepartmentName': ['icontains'], 'StatusID__OpCl': ['exact'], 'WorkOrderType': ['exact']}
+    ordering_fields = ['id', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID__AssetSubdivisionID__AssetCode', 'WorkRequestID__AssetSubdivisionID__AssetName', 'WorkRequestID__FailureModeID__FailureModeName', 'DepartmentID__DepartmentName', 'WODescription', 'WorkOrderType', 'StatusID__StatusName',]
 
 
 class WorkOrderCreate(generics.ListCreateAPIView):
     serializer_class = WorkOrderSerializer
     queryset = WorkOrder.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
-    filter_fields = {'id': ['exact'], 'WorkOrderType': ['exact'],'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'], 'WorkRequestID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact'], 'DepartmentID': ['exact']}
-    ordering_fields = '__all__'
+    filter_fields = {'id': ['exact'], 'id': ['icontains'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'],
+                     'WorkRequestID': ['exact'],'WorkRequestID__AssetSubdivisionID__AssetName': ['icontains'],'WorkRequestID__FailureModeID__FailureModeName': ['icontains'], 'StatusID': ['exact'],
+                     'DepartmentID': ['exact'], 'DepartmentID__DepartmentName': ['icontains'], 'StatusID__OpCl': ['exact'], 'WorkOrderType': ['exact']}
+    ordering_fields = ['id', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID__AssetSubdivisionID__AssetCode', 'WorkRequestID__AssetSubdivisionID__AssetName', 'WorkRequestID__FailureModeID__FailureModeName', 'DepartmentID__DepartmentName', 'WODescription', 'WorkOrderType', 'StatusID__StatusName',]
 
 
 class WorkOrderRetrive(generics.RetrieveUpdateDestroyAPIView):

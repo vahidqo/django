@@ -91,6 +91,11 @@ class PersonnelSerializer(serializers.ModelSerializer):
         model = Personnel
         fields = ['id', 'user', 'PersonnelCode', 'PersonnelNetCode', 'PersonnelName', 'PersonnelFamily', 'PersonnelMobile',
                   'DepartmentID']
+        extra_kwargs = {
+            'PersonnelNetCode': {'required': False,
+                                 'allow_null': True
+                                 },
+        }
 
 
 class PersonnelJobCategorySerializer(serializers.ModelSerializer):

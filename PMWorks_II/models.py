@@ -532,7 +532,7 @@ class Department(models.Model):
 class Personnel(models.Model):
     user = models.OneToOneField(User, on_delete=models.RESTRICT, null=True, blank=True, verbose_name='یوزر')
     PersonnelCode = models.CharField(max_length=100, verbose_name='کد پرسنل')
-    PersonnelNetCode = models.CharField(max_length=100, verbose_name='کد نت پرسنل')
+    PersonnelNetCode = models.CharField(max_length=100, null=True, blank=True, verbose_name='کد نت پرسنل')
     PersonnelName = models.CharField(max_length=200, verbose_name='نام پرسنل')
     PersonnelFamily = models.CharField(max_length=200, verbose_name='فامیل پرسنل')
     PersonnelMobile = models.CharField(max_length=100, verbose_name='شماره پرسنل', null=True, blank=True)
