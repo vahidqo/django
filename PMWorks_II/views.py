@@ -518,8 +518,9 @@ class EmptyStringFilter(filters.BooleanFilter):
         return method(**{self.field_name: ""})
 
 class PersonnelFilter(filters.FilterSet):
-    id = NumberInFilter(field_namAssetSubdivisione='id', lookup_expr='exact')
+    id = NumberInFilter(field_name='id', lookup_expr='exact')
     PersonnelNetCode__isempty = EmptyStringFilter(field_name='PersonnelNetCode')
+    PersonnelNetCode__isnull = filters.BooleanFilter(field_name='PersonnelNetCode', lookup_expr='isnull')
     PersonnelNetCode = filters.CharFilter(field_name='PersonnelNetCode', lookup_expr='icontains')
     PersonnelCode = filters.CharFilter(field_name='PersonnelCode', lookup_expr='icontains')
     PersonnelName = filters.CharFilter(field_name='PersonnelName', lookup_expr='icontains')
