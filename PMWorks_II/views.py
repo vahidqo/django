@@ -7,7 +7,8 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, \
     AssetSubdivisionSparePart, PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, WOTemplate, \
     TemplateSchualingDate, Status, WRWORelationStatus, WRStatus, WOStatus, WorkflowLevel, \
-    WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity, WOAssetSubdivision
+    WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity, WOAssetSubdivision, \
+    Role, UserRole
 
 from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetClassSubdivisionSerializer, \
     AssetClassSpecificDataSerializer, SpecificDataSerializer, FailureModeSerializer, LocationSerializer, \
@@ -22,7 +23,7 @@ from .serializers import AssetCategorySerializer, AssetClassSerializer, AssetCla
     TemplateSchualingDateSerializer, StatusSerializer, WRWORelationStatusSerializer, WRStatusSerializer, WOStatusSerializer, \
     WorkflowLevelSerializer, WorkflowLevelStatusSerializer, WorkOrderNewSerializer, WOTaskorderSerializer, \
     WorkflowLevelStatusShowSerializer, WOTemplateAssetSerializer, WOTemplateActivitySerializer, WOTemplateAssetNewSerializer, \
-    WOAssetSubdivisionSerializer
+    WOAssetSubdivisionSerializer, RoleSerializer, UserRoleSerializer
 
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
@@ -1398,6 +1399,42 @@ class WorkflowLevelStatusShowCreate(generics.ListCreateAPIView):
 class WorkflowLevelStatusShowRetrive(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WorkflowLevelStatusShowSerializer
     queryset = WorkflowLevelStatusShow.objects.all()
+
+class RoleView(generics.ListCreateAPIView):
+    serializer_class = RoleSerializer
+    queryset = Role.objects.all()
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'RoleName': ['exact']}
+    ordering_fields = '__all__'
+
+class RoleCreate(generics.ListCreateAPIView):
+    serializer_class = RoleSerializer
+    queryset = Role.objects.all()
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'RoleName': ['exact']}
+    ordering_fields = '__all__'
+
+class RoleRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = RoleSerializer
+    queryset = Role.objects.all()
+
+class UserRoleView(generics.ListCreateAPIView):
+    serializer_class = UserRoleSerializer
+    queryset = UserRole.objects.all()
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'user': ['exact'], 'RoleID': ['exact']}
+    ordering_fields = '__all__'
+
+class UserRoleCreate(generics.ListCreateAPIView):
+    serializer_class = UserRoleSerializer
+    queryset = UserRole.objects.all()
+    filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'user': ['exact'], 'RoleID': ['exact']}
+    ordering_fields = '__all__'
+
+class UserRoleRetrive(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserRole
+    queryset = UserRole.objects.all()
     
 class WRTaskView(generics.ListCreateAPIView):
     serializer_class = AssetClassTaskSerializer

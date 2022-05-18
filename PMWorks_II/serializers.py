@@ -6,7 +6,7 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, AssetClassDocument, AssetSubdivisionSparePart, \
     PersonnelJobCategory, WorkRequestFailureCause, WOTemplateType, TemplateSchualingDate, WOStatus, WRStatus, \
     WRWORelationStatus, Status, WorkflowLevel, WorkflowLevelStatus, WorkflowLevelStatusShow, WOTemplateAsset, WOTemplateActivity, \
-    WOAssetSubdivision
+    WOAssetSubdivision, Role, UserRole
 from django.contrib.auth.models import User
 from drf_extra_fields.fields import Base64FileField
 
@@ -373,6 +373,16 @@ class WorkflowLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkflowLevel
         fields = ['id', 'WorkflowLevelName', 'WorkflowLevelType']
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ['id', 'RoleName']
+
+class UserRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserRole
+        fields = ['id', 'user', 'RoleID']
 
 class WorkflowLevelStatusSerializer(serializers.ModelSerializer):
     class Meta:

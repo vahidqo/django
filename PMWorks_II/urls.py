@@ -193,4 +193,10 @@ urlpatterns = [
     path('StatusWO/', views.StatusWOView.as_view(), name='StatusWOView'),
     path('StatusWO', views.StatusWOCreate.as_view(), name='StatusWOCreate'),
     path('StatusWO/<int:pk>/', views.StatusWRRetrive.as_view(), name='StatusWORetrive'),
+    path('Role/', views.RoleView.as_view(), name='RoleView'),
+    path('Role', views.RoleCreate.as_view(), name='RoleCreate'),
+    path('Role/<int:pk>/', views.RoleRetrive.as_view(), name='RoleRetrive'),
+    path('UserRole/', views.UserRoleView.as_view(), name='UserRoleView'),
+    path('UserRole', views.UserRoleCreate.as_view(), name='UserRoleCreate'),
+    path('UserRole/<int:pk>/', views.UserRoleRetrive.as_view(), name='UserRoleRetrive'),
 ]

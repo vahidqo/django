@@ -1112,3 +1112,30 @@ class WorkflowLevelStatusShow(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.StatusID, self.WorkflowLevelID)
+
+class Role(models.Model):
+    RoleName = models.CharField(max_length=200, verbose_name='نام نقش')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'نقش'
+        verbose_name_plural = 'نقش ها'
+
+    def __str__(self):
+        return "{}".format(self.RoleName)
+
+class UserRole(models.Model):
+    user = models.OneToOneField(User, on_delete=models.RESTRICT, verbose_name='یوزر')
+    RoleID = models.OneToOneField(Role, on_delete=models.RESTRICT, verbose_name='نقش')
+    Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
+    Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
+
+    class Meta:
+        ordering = ['-Create']
+        verbose_name = 'نقش يوزر'
+        verbose_name_plural = 'نقش هاي يوزر'
+
+    def __str__(self):
+        return "{}-{}".format(self.user, self.RoleID)
