@@ -7,8 +7,10 @@ from .models import AssetCategory, AssetClass, AssetClassSubdivision, FailureMod
     JobCategory, Department, Personnel, AssetPriority, Location, Asset, AssetSubdivision, SparePartDimension, \
     SparePartCategory, Document, AssetSpecificData, SparePart, TaskType, AssetClassTask, Supplier, SupplierSpecific, \
     SupplierSpecificData, WorkRequest, TypeWr, WorkPriority, WorkOrder, WOSupplier, WOPersonnel, Delay, WODelay, \
-    WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData
+    WOSparePart, WOTask, WOTemplate, WOTemplateSchualing, AssetClassSpecificData, Role, UserRole
 
+admin.site.register(Role)
+admin.site.register(UserRole)
 
 @admin.register(AssetCategory)
 class AssetCategoryAdmin(admin.ModelAdmin):
