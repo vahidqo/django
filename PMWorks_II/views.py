@@ -735,7 +735,7 @@ class WorkRequestView(generics.ListCreateAPIView):
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'WRDate': ['icontains'], 'WRDateOfRegistration': ['icontains'], 'AssetSubdivisionID': ['exact'], 'FailureModeID': ['exact'],
                         'WorkPriorityID': ['exact'], 'TypeWrID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact'], 'id': ['icontains'],
-                        'AssetSubdivisionID__AssetName': ['icontains'], 'FailureModeID__FailureModeName': ['icontains'], 'WorkPriorityID__WorkPriorityName': ['icontains']}
+                        'AssetSubdivisionID__AssetName': ['icontains'],'AssetSubdivisionID__AssetCode': ['icontains'], 'FailureModeID__FailureModeName': ['icontains'], 'WorkPriorityID__WorkPriorityName': ['icontains']}
     ordering_fields = ['id', 'WRDate', 'AssetSubdivisionID__AssetCode', 'AssetSubdivisionID__AssetName', 'AssetSubdivisionID__AssetClassNameChain', 'FailureModeID__FailureModeName', 'WorkPriorityID__WorkPriorityName', 'WRDescription', 'TypeWrID__TypeWrName', 'StatusID__StatusName',]
 
 
@@ -745,7 +745,7 @@ class WorkRequestCreate(generics.ListCreateAPIView):
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'WRDate': ['icontains'], 'WRDateOfRegistration': ['icontains'], 'AssetSubdivisionID': ['exact'], 'FailureModeID': ['exact'],
                         'WorkPriorityID': ['exact'], 'TypeWrID': ['exact'], 'StatusID': ['exact'], 'StatusID__OpCl': ['exact'], 'id': ['icontains'],
-                        'AssetSubdivisionID__AssetName': ['icontains'], 'FailureModeID__FailureModeName': ['icontains'], 'WorkPriorityID__WorkPriorityName': ['icontains']}
+                        'AssetSubdivisionID__AssetName': ['icontains'],'AssetSubdivisionID__AssetCode': ['icontains'], 'FailureModeID__FailureModeName': ['icontains'], 'WorkPriorityID__WorkPriorityName': ['icontains']}
     ordering_fields = ['id', 'WRDate', 'AssetSubdivisionID__AssetCode', 'AssetSubdivisionID__AssetName', 'AssetSubdivisionID__AssetClassNameChain', 'FailureModeID__FailureModeName', 'WorkPriorityID__WorkPriorityName', 'WRDescription', 'TypeWrID__TypeWrName', 'StatusID__StatusName',]
 
 
@@ -759,7 +759,7 @@ class WorkOrderView(generics.ListCreateAPIView):
     queryset = WorkOrder.objects.all().values('id', 'WOTemplateCode', 'WorkOrderType', 'DateOfStart','DateOfFinish','WODateOfRegistration','WODescription','DateOfPlanStart','DateOfPlanFinish','WorkRequestID','StatusID','WorkRequestID__AssetSubdivisionID','WorkRequestID__FailureModeID','DepartmentID')
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'id': ['icontains'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'],
-                     'WorkRequestID': ['exact'],'WorkRequestID__AssetSubdivisionID__AssetName': ['icontains'],'WorkRequestID__FailureModeID__FailureModeName': ['icontains'], 'StatusID': ['exact'],
+                     'WorkRequestID': ['exact'],'WorkRequestID__AssetSubdivisionID__AssetName': ['icontains'],'WorkRequestID__AssetSubdivisionID__AssetCode': ['icontains'],'WorkRequestID__FailureModeID__FailureModeName': ['icontains'], 'StatusID': ['exact'],
                      'DepartmentID': ['exact'], 'DepartmentID__DepartmentName': ['icontains'], 'StatusID__OpCl': ['exact'], 'WorkOrderType': ['exact']}
     ordering_fields = ['id', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID__AssetSubdivisionID__AssetCode', 'WorkRequestID__AssetSubdivisionID__AssetName', 'WorkRequestID__FailureModeID__FailureModeName', 'DepartmentID__DepartmentName', 'WODescription', 'WorkOrderType', 'StatusID__StatusName',]
 
@@ -769,7 +769,7 @@ class WorkOrderCreate(generics.ListCreateAPIView):
     queryset = WorkOrder.objects.all()
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
     filter_fields = {'id': ['exact'], 'id': ['icontains'], 'WODateOfRegistration': ['icontains'], 'WODescription': ['icontains'], 'DateOfStart': ['icontains'], 'DateOfFinish': ['icontains'], 'DateOfPlanStart': ['icontains'], 'DateOfPlanFinish': ['icontains'],
-                     'WorkRequestID': ['exact'],'WorkRequestID__AssetSubdivisionID__AssetName': ['icontains'],'WorkRequestID__FailureModeID__FailureModeName': ['icontains'], 'StatusID': ['exact'],
+                     'WorkRequestID': ['exact'],'WorkRequestID__AssetSubdivisionID__AssetName': ['icontains'],'WorkRequestID__AssetSubdivisionID__AssetCode': ['icontains'],'WorkRequestID__FailureModeID__FailureModeName': ['icontains'], 'StatusID': ['exact'],
                      'DepartmentID': ['exact'], 'DepartmentID__DepartmentName': ['icontains'], 'StatusID__OpCl': ['exact'], 'WorkOrderType': ['exact']}
     ordering_fields = ['id', 'DateOfPlanStart', 'DateOfPlanFinish', 'WorkRequestID__AssetSubdivisionID__AssetCode', 'WorkRequestID__AssetSubdivisionID__AssetName', 'WorkRequestID__FailureModeID__FailureModeName', 'DepartmentID__DepartmentName', 'WODescription', 'WorkOrderType', 'StatusID__StatusName',]
 
@@ -1109,6 +1109,7 @@ class WRSpareView(generics.ListCreateAPIView):
             return queryset.filter(id__in = spare.values('SparePartID'))
         return queryset
     filter_backends =  (DjangoFilterBackend, OrderingFilter)
+    filter_fields = {'id': ['exact'], 'SparePartCode': ['icontains'], 'SparePartName': ['icontains'], 'SparePartCategoryID': ['exact'], 'SparePartDimensionID': ['exact']}
     ordering_fields = '__all__'
 
 
