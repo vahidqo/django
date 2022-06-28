@@ -92,7 +92,7 @@ class FailureMode(models.Model):
 
 
 class FailureCause(models.Model):
-    FailureCauseCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد علت خرابی')
+    FailureCauseCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد علت خرابی')
     FailureCauseName = models.CharField(max_length=200, verbose_name='نام علت حرابی')
     FailureCauseDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     FailureModeID = models.ForeignKey('FailureMode', on_delete=models.RESTRICT, null=True, blank=False,
@@ -141,7 +141,7 @@ class AssetClassSpecificData(models.Model):
 
 
 class AssetPriority(models.Model):
-    AssetPriorityCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد اولویت')
+    AssetPriorityCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد اولویت')
     AssetPriorityName = models.CharField(max_length=200, verbose_name='نام اولویت')
     AssetPriorityValue = models.IntegerField(verbose_name='ارزش اولویت')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -157,7 +157,7 @@ class AssetPriority(models.Model):
 
 
 class Location(models.Model):
-    LocationCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد مکان')
+    LocationCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد مکان')
     LocationName = models.CharField(max_length=200, verbose_name='نام مکان')
     LocationFatherID = models.ForeignKey('self', on_delete=models.RESTRICT, null=True, blank=True, verbose_name='مکان پدر')
     LocationCodeChain = models.CharField(max_length=1000, null=True, blank=True, verbose_name='کد مکانزنجيزه')
@@ -184,7 +184,7 @@ def save_Loc(sender, instance, **kwargs):
 pre_save.connect(save_Loc, sender=Location)
 
 class Asset(models.Model):
-    AssetCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد تجهیز')
+    AssetCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد تجهیز')
     AssetName = models.CharField(max_length=200, verbose_name='نام تجهیز')
     InstallationDate = models.DateField(verbose_name='تاریخ نصب', null=True, blank=True)
     AssetPriorityID = models.ForeignKey('AssetPriority', on_delete=models.RESTRICT, null=True, blank=False, verbose_name='اولویت')
@@ -353,7 +353,7 @@ post_save.connect(save_AssetSpe, sender=AssetSubdivision)
 
 
 class SparePartDimension(models.Model):
-    SparePartDimensionCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد بعد')
+    SparePartDimensionCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد بعد')
     SparePartDimensionName = models.CharField(max_length=200, verbose_name='نام بعد')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -368,7 +368,7 @@ class SparePartDimension(models.Model):
 
 
 class SparePartCategory(models.Model):
-    SparePartCategoryCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد خانواده قطعه')
+    SparePartCategoryCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد خانواده قطعه')
     SparePartCategoryName = models.CharField(max_length=200, verbose_name='نام خانواده قطعه')
     SparePartCategoryFather = models.ForeignKey('self', on_delete=models.RESTRICT, null=True, blank=True,
                                                 verbose_name='خانواده قطعه  پدر')
@@ -385,7 +385,7 @@ class SparePartCategory(models.Model):
 
 
 class SparePart(models.Model):
-    SparePartCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد قطعه')
+    SparePartCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد قطعه')
     SparePartName = models.CharField(max_length=200, verbose_name='نام قطعه')
     SparePartCategoryID = models.ForeignKey('SparePartCategory', on_delete=models.RESTRICT, null=True, blank=False,
                                             verbose_name='خانواده قطعه')
@@ -408,7 +408,7 @@ def upload_path(instance, filename):
 
 
 class Document(models.Model):
-    DocumentCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد فایل')
+    DocumentCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد فایل')
     DocumentName = models.CharField(max_length=200, verbose_name='نام فایل')
     DocumentDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     FileAddress = models.FileField(upload_to=upload_path, verbose_name='فایل')
@@ -440,7 +440,7 @@ class AssetClassDocument(models.Model):
 
 
 class TaskType(models.Model):
-    TaskTypeCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد نوع وظیفه')
+    TaskTypeCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد نوع وظیفه')
     TaskTypeName = models.CharField(max_length=200, verbose_name='نام نوع وظیفه')
     TaskTypeDescription = models.TextField(verbose_name='توضیحات', null=True, blank=True)
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -456,7 +456,7 @@ class TaskType(models.Model):
 
 
 class JobCategory(models.Model):
-    JobCategoryCode = models.CharField(max_length=100, validators=[alphanumeric], verbose_name='کد نوع شغل')
+    JobCategoryCode = models.CharField(max_length=100, unique=True, validators=[alphanumeric], verbose_name='کد نوع شغل')
     JobCategoryName = models.CharField(max_length=200, verbose_name='نام نوع شغل')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -515,7 +515,7 @@ pre_save.connect(save_Task, sender=AssetClassTask)
 
 
 class Department(models.Model):
-    DepartmentCode = models.CharField(max_length=100, verbose_name='کد دپارتمان')
+    DepartmentCode = models.CharField(max_length=100, unique=True, verbose_name='کد دپارتمان')
     DepartmentName = models.CharField(max_length=200, verbose_name='نام دپارتمان')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -565,7 +565,7 @@ class PersonnelJobCategory(models.Model):
 
 
 class TypeWr(models.Model):
-    TypeWrCode = models.CharField(max_length=100, verbose_name='کد نوع درخواست کار')
+    TypeWrCode = models.CharField(max_length=100, unique=True, verbose_name='کد نوع درخواست کار')
     TypeWrName = models.CharField(max_length=200, verbose_name='نام نوع درخواست کار')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
@@ -580,7 +580,7 @@ class TypeWr(models.Model):
 
 
 class WorkPriority(models.Model):
-    WorkPriorityCode = models.CharField(max_length=100, verbose_name='کد اولویت')
+    WorkPriorityCode = models.CharField(max_length=100, unique=True, verbose_name='کد اولویت')
     WorkPriorityName = models.CharField(max_length=200, verbose_name='نام اولویت')
     WorkPriorityValue = models.IntegerField(verbose_name='مقدار اولویت')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
@@ -596,7 +596,7 @@ class WorkPriority(models.Model):
 
 
 class Supplier(models.Model):
-    SupplierCode = models.CharField(max_length=100, verbose_name='کد تامین کننده')
+    SupplierCode = models.CharField(max_length=100, unique=True, verbose_name='کد تامین کننده')
     SupplierName = models.CharField(max_length=200, verbose_name='نام تامین کننده')
     Create = jmodels.jDateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='تاریخ ایجاد')
     Update = jmodels.jDateTimeField(auto_now=True, null=True, blank=True, verbose_name='تاریخ آخرین تغییر')
